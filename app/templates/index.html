@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sterbegeld Bot - CHECK24</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Chat Interface -->
+        <div class="chat-section">
+            <div class="chat-header">
+                <h1>Sterbegeld-Berater</h1>
+                <p>Finde die passende Sterbegeldversicherung</p>
+            </div>
+            
+            <div id="chat-container" class="chat-messages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+            
+            <div class="chat-input-wrapper">
+                <form id="chat-form">
+                    <textarea 
+                        id="user-input" 
+                        placeholder="Nachricht eingeben..." 
+                        rows="1"
+                        maxlength="500"
+                    ></textarea>
+                    <button type="submit" id="send-btn" class="send-button">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Typing Indicator -->
+            <div id="typing-indicator" class="typing-indicator" style="display: none;">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+        
+        <!-- Debug Panel -->
+        <div class="debug-section">
+            <div class="debug-header">
+                <h2>Debug Panel</h2>
+                <button id="toggle-debug" class="toggle-btn">▼</button>
+            </div>
+            
+            <div id="debug-content" class="debug-content">
+                <details class="debug-block">
+                    <summary>System Prompt</summary>
+                    <pre id="debug-system-prompt">Warte auf erste Nachricht...</pre>
+                </details>
+                
+                <div class="debug-block">
+                    <h3>Last User Message</h3>
+                    <pre id="debug-user-message">-</pre>
+                </div>
+                
+                <div class="debug-block">
+                    <h3>LLM Response (Raw)</h3>
+                    <pre id="debug-llm-response">-</pre>
+                </div>
+                
+                <div class="debug-block">
+                    <h3>Tokens Used</h3>
+                    <pre id="debug-tokens">-</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>

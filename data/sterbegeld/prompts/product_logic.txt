@@ -1,0 +1,32 @@
+# Produktlogik: Sterbegeldversicherungen
+
+## Was ist eine Sterbegeldversicherung?
+Eine Sterbegeldversicherung ist eine Kapitallebensversicherung, die im Todesfall eine vereinbarte Summe zur Deckung der Bestattungskosten auszahlt.
+
+## Wichtige Parameter:
+- **Versicherungssumme**: Zwischen 2.000 € und 15.000 €
+- **Beitrag**: Monatlich oder einmalig zahlbar
+- **Alter**: Eintrittsalter meist 18-99 Jahre (je nach Tarif)
+- **Gesundheitsprüfung**: Viele Tarife verzichten auf Gesundheitserklärung
+
+## Berechnungsgrundlagen:
+- Höherer Beitrag bei höherem Eintrittsalter
+- Gesundheitszustand kann Beitragshöhe beeinflussen (bei Gesundheitsprüfung)
+- Feste Preise je nach Tarif und Anbieter
+
+## Wartezeiten:
+- Oft 12-24 Monate Wartezeit bei Tod durch Krankheit
+- Keine Wartezeit bei Unfalltod
+- Einige Tarife bieten sofortigen Versicherungsschutz
+
+## Beitragsfreiheit:
+- Manche Tarife werden ab einem bestimmten Alter beitragsfrei (z.B. 65, 75 oder 85 Jahre)
+- Versicherungsschutz bleibt auch nach Beitragsfreiheit bestehen
+
+## Steuerliche Aspekte:
+- Auszahlung ist steuerfrei (bei Tod des Versicherten)
+
+## Überschussregelung:
+- Bonuszahlung: Überschüsse werden als einmalige Zahlung ausgezahlt
+- Beitragsrabatt: Überschüsse reduzieren laufende Beiträge
+- Keine: Tarif ohne Überschussregelung

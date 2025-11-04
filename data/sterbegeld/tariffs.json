@@ -1,0 +1,69 @@
+{
+  "tariffs": [
+    {
+      "name": "Sterbegeld Basis",
+      "provider": "VersicherungPlus",
+      "age_min": 40,
+      "age_max": 85,
+      "coverage_amount": 3000,
+      "monthly_premium": 10.50,
+      "health_declaration_required": false,
+      "contribution_free_from_age": 85,
+      "waiting_period_months": 24,
+      "surplus_regulation": "Bonuszahlung",
+      "payment_method": "Monatlich"
+    },
+    {
+      "name": "Sterbegeld Komfort",
+      "provider": "VersicherungPlus",
+      "age_min": 40,
+      "age_max": 80,
+      "coverage_amount": 5000,
+      "monthly_premium": 17.80,
+      "health_declaration_required": false,
+      "contribution_free_from_age": 85,
+      "waiting_period_months": 24,
+      "surplus_regulation": "Beitragsrabatt",
+      "payment_method": "Monatlich"
+    },
+    {
+      "name": "Sterbegeld Best",
+      "provider": "SecureLife",
+      "age_min": 18,
+      "age_max": 75,
+      "coverage_amount": 5000,
+      "monthly_premium": 15.20,
+      "health_declaration_required": true,
+      "contribution_free_from_age": 65,
+      "waiting_period_months": 0,
+      "surplus_regulation": "Keine",
+      "payment_method": "Monatlich"
+    },
+    {
+      "name": "Sterbegeld Premium",
+      "provider": "SecureLife",
+      "age_min": 18,
+      "age_max": 70,
+      "coverage_amount": 8000,
+      "monthly_premium": 26.50,
+      "health_declaration_required": true,
+      "contribution_free_from_age": 65,
+      "waiting_period_months": 12,
+      "surplus_regulation": "Bonuszahlung",
+      "payment_method": "Monatlich"
+    },
+    {
+      "name": "Sterbegeld Direkt",
+      "provider": "CHECK24 Versicherung",
+      "age_min": 50,
+      "age_max": 99,
+      "coverage_amount": 4000,
+      "monthly_premium": 19.90,
+      "health_declaration_required": false,
+      "contribution_free_from_age": null,
+      "waiting_period_months": 18,
+      "surplus_regulation": "Keine",
+      "payment_method": "Einmalig"
+    }
+  ]
+}

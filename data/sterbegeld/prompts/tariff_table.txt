@@ -1,0 +1,16 @@
+# Verfügbare Tarife
+
+Die aktuell verfügbaren Tarife werden aus der Tarifdatenbank geladen und umfassen folgende Informationen:
+
+- **Name**: Tarifbezeichnung
+- **Anbieter**: Versicherungsgesellschaft
+- **Altersbereich**: Eintrittsalter von X bis Y Jahre
+- **Versicherungssumme**: Deckungssumme in EUR
+- **Monatsbeitrag**: Fester Preis pro Monat in EUR
+- **Gesundheitserklärung**: Erforderlich (Ja/Nein)
+- **Beitragsfrei ab**: Alter, ab dem keine Beiträge mehr zahlt werden müssen
+- **Wartezeit**: Wartefrist in Monaten
+- **Überschussregelung**: Art der Überschussbeteiligung
+- **Zahlweise**: Monatlich oder Einmalig
+
+Hinweis: Die Tarife werden bei jedem Suchvorgang dynamisch aus der Datenbank geladen.

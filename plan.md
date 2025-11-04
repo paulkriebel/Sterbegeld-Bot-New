@@ -1,0 +1,329 @@
+# Implementation Plan: Sterbegeld Chatbot (TDD)
+
+**Gesamtdauer**: 7-11 Tage  
+**Ansatz**: Test-Driven Development (TDD) - Red → Green → Refactor  
+**Status**: 🚀 GESTARTET
+
+---
+
+## Phase 1: Projekt-Setup & Datenmodelle (1-2 Tage)
+
+### ✅ 1.1 Repository-Setup & Projektstruktur (1h) - DONE
+- [x] Projektverzeichnisse erstellen
+- [x] `.gitignore` anlegen
+- [x] `requirements.txt` erstellen
+- [x] `.env.example` Template
+- [x] `.env` mit API Key erstellt
+
+### ✅ 1.2 Python Virtual Environment & Dependencies (1h) - DONE
+- [x] venv erstellen und aktivieren
+- [x] Dependencies installieren (Flask, OpenAI, pytest, etc.)
+- [x] Imports testen
+
+### ✅ 1.3 Tarifdaten-Schema definieren (2h) - DONE
+**Test-First**: Test für Tarif-JSON-Validierung schreiben
+- [x] TEST: `test_tariff_schema_validation()` - Tarif-JSON hat alle Pflichtfelder ✅
+- [x] CODE: `data/sterbegeld/tariffs.json` mit 5 Beispiel-Tarifen erstellt ✅
+- [x] REFACTOR: Schema ist sauber, keine Änderungen nötig ✅
+- [x] Tests: 2 passed ✅
+
+**Schema-Felder**:
+```json
+{
+  "name": str,
+  "provider": str,
+  "age_min": int,
+  "age_max": int,
+  "coverage_amount": int,
+  "monthly_premium": float,
+  "health_declaration_required": bool,
+  "contribution_free_from_age": int,
+  "waiting_period_months": int,
+  "surplus_regulation": str,
+  "payment_method": str
+}
+```
+
+### ✅ 1.4 Tarif-Search-Engine (2h) - DONE
+**Test-First**: Tests für Filter- und Ranking-Logik
+
+**Test 1**: Altersfilter ✅
+- [x] TEST: `test_filter_by_age()` - Nur Tarife im Altersbereich zurückgeben
+- [x] CODE: `filter_by_age()` Funktion implementiert
+- [x] REFACTOR: Edge Cases behandelt
+
+**Test 2**: Versicherungssummen-Filter ✅
+- [x] TEST: `test_filter_by_coverage()` - Tarife >= gewünschter Summe
+- [x] CODE: `filter_by_coverage()` implementiert
+- [x] REFACTOR: Validierung
+
+**Test 3**: Optional-Parameter-Filter ✅
+- [x] TEST: `test_filter_by_optional_params()` - Gesundheitserklärung, Wartezeit, etc.
+- [x] CODE: `filter_by_optional_params()` implementiert
+- [x] REFACTOR: Generische Filterlogik
+
+**Test 4**: Ranking (Sortierung nach Preis) ✅
+- [x] TEST: `test_rank_tariffs()` - Günstigster zuerst
+- [x] CODE: `rank_tariffs()` implementiert
+- [x] REFACTOR: Top-N-Logik
+
+**Test 5**: Integration ✅
+- [x] TEST: `test_search_tariffs_integration()` - Kompletter Flow
+- [x] CODE: `search_tariffs()` Hauptfunktion implementiert
+- [x] REFACTOR: Error Handling
+
+**Deliverable**: `app/products/sterbegeld/tariff_engine.py` ✅
+**Tests**: 6 passed ✅
+
+### ✅ 1.5 Prompt-Dateien erstellen (1h) - DONE
+- [x] `data/sterbegeld/prompts/product_logic.txt` ✅
+- [x] `data/sterbegeld/prompts/tariff_table.txt` ✅
+- [x] `data/sterbegeld/prompts/interaction_style.txt` ✅
+
+**Milestone 1**: ✅ Tarifdaten-Modell validiert, Beispiel-Tarife durchsuchbar, Prompts bereit!
+
+---
+
+## Phase 2: Backend-Core & LLM-Integration (2-3 Tage)
+
+### ✅ 2.1 Flask App Factory & Config (1h)
+**Test-First**: App-Initialisierung testen
+- [ ] TEST: `test_app_creation()` - Flask-App instanziierbar
+- [ ] CODE: `app/__init__.py` mit create_app()
+- [ ] CODE: `app/config.py` (DevelopmentConfig)
+- [ ] REFACTOR: Environment-Variable-Loading
+
+### ✅ 2.2 OpenAI LLM-Client (2h)
+**Test-First**: LLM-Client mit Mock testen
+
+**Test 1**: API-Initialisierung
+- [ ] TEST: `test_llm_client_init()` - Client mit API-Key initialisierbar
+- [ ] CODE: `app/core/llm_client.py` - LLMClient-Klasse
+- [ ] REFACTOR: Config-Injection
+
+**Test 2**: Chat-Completion (Mock)
+- [ ] TEST: `test_chat_completion()` - Mock-Response verarbeiten
+- [ ] CODE: `chat_completion()` Methode
+- [ ] REFACTOR: Error Handling (RateLimitError, APIError)
+
+**Test 3**: Function Calling (Mock)
+- [ ] TEST: `test_function_call_detection()` - Function Call erkennen
+- [ ] CODE: Function-Call-Parsing
+- [ ] REFACTOR: JSON-Validierung
+
+**Deliverable**: `app/core/llm_client.py`
+
+### ✅ 2.3 Sterbegeld-Chatbot-Implementierung (3h)
+**Test-First**: Chatbot-Logik testen
+
+**Test 1**: Prompt-Assembly
+- [ ] TEST: `test_build_system_prompt()` - Prompt-Kombination korrekt
+- [ ] CODE: `build_system_prompt()` in `app/products/sterbegeld/chatbot.py`
+- [ ] REFACTOR: Template-Loading
+
+**Test 2**: Konversations-History-Management
+- [ ] TEST: `test_truncate_history()` - Nur letzte 20 Messages
+- [ ] CODE: `truncate_history()`
+- [ ] REFACTOR: Token-Counting (optional)
+
+**Test 3**: Chat-Flow
+- [ ] TEST: `test_chat_flow()` - User-Message → LLM → Response
+- [ ] CODE: `chat()` Hauptmethode
+- [ ] REFACTOR: State-Management
+
+**Deliverable**: `app/products/sterbegeld/chatbot.py`
+
+### ✅ 2.4 Function Calling Definitions (1h)
+- [ ] `app/products/sterbegeld/functions.py` - `tariff_search` Definition
+- [ ] JSON-Schema für Function Call
+- [ ] Validierung
+
+### ✅ 2.5 Function Execution Logik (2h)
+**Test-First**: Function-Handler testen
+- [ ] TEST: `test_execute_tariff_search()` - Function Call → Tarif-Engine
+- [ ] CODE: `execute_function()` in chatbot
+- [ ] REFACTOR: Function-Routing
+
+### ✅ 2.6 REST API Endpoints (2h)
+**Test-First**: API-Tests
+
+**Test 1**: Health-Check
+- [ ] TEST: `test_health_endpoint()` - GET /health → 200
+- [ ] CODE: Health-Route in `app/api/chat_routes.py`
+- [ ] REFACTOR: Dependency-Checks
+
+**Test 2**: Chat-Endpoint
+- [ ] TEST: `test_chat_endpoint()` - POST /api/chat → JSON-Response
+- [ ] CODE: Chat-Route
+- [ ] REFACTOR: Request-Validierung
+
+**Deliverable**: `app/api/chat_routes.py`
+
+### ✅ 2.7 Logging Setup (1h)
+- [ ] `app/utils/logger.py` - Console-Logging
+- [ ] Log-Level: DEBUG (Development)
+- [ ] Format: Timestamp + Level + Message
+
+### ✅ 2.8 API-Tests (manuell) (1h)
+- [ ] cURL-Test: `POST /api/chat` mit Beispiel-Message
+- [ ] cURL-Test: `GET /health`
+- [ ] Logs validieren
+
+**Milestone 2**: ✅ Backend antwortet auf Chat-Requests, Function Calling funktioniert
+
+---
+
+## Phase 3: Frontend-Entwicklung (2-3 Tage)
+
+### ✅ 3.1 HTML-Basis-Template (1h)
+- [ ] `app/templates/index.html` - Basic Layout
+- [ ] Chat-Container
+- [ ] Input-Form
+- [ ] Debug-Panel-Container
+
+### ✅ 3.2 CSS-Styling (4h)
+**Mobile-First-Ansatz**
+- [ ] CSS-Variablen (Farb-Palette)
+- [ ] Chat-Container-Styling
+- [ ] Message-Bubbles (Bot + User)
+- [ ] Input-Bereich
+- [ ] Debug-Panel (Desktop Side-by-Side)
+- [ ] Responsive Breakpoints (768px)
+
+**Deliverable**: `app/static/css/style.css`
+
+### ✅ 3.3 Chat-Interface DOM-Manipulation (3h)
+**Test-First** (manuell im Browser)
+- [ ] `addMessageToChat(role, text)` Funktion
+- [ ] Message-Rendering (Bot vs. User)
+- [ ] Scroll-to-Bottom bei neuer Nachricht
+- [ ] Timestamp-Anzeige
+
+**Deliverable**: `app/static/js/chat.js`
+
+### ✅ 3.4 Input-Handling & Send-Funktion (2h)
+- [ ] `sendMessage()` Funktion
+- [ ] Fetch API: POST /api/chat
+- [ ] Conversation-History speichern (Client-Side Array)
+- [ ] Input-Feld leeren nach Send
+- [ ] Enter-Key Handler (Shift+Enter = Newline)
+
+### ✅ 3.5 Debug-Panel (2h)
+- [ ] `updateDebugPanel(data)` Funktion
+- [ ] System-Prompt anzeigen (Collapsible)
+- [ ] User-Message anzeigen
+- [ ] LLM-Response (JSON, prettified)
+
+### ✅ 3.6 Typing-Indikator (1h)
+- [ ] `showTypingIndicator()` / `hideTypingIndicator()`
+- [ ] Einfacher Spinner (CSS-Animation)
+- [ ] Anzeige während API-Call
+
+### ✅ 3.7 Responsive Design Testing (1h)
+- [ ] Test auf iPhone (Safari)
+- [ ] Test auf Desktop (Chrome)
+- [ ] Breakpoint-Validierung
+
+**Milestone 3**: ✅ Vollständiges UI, Konversationen funktionieren End-to-End
+
+---
+
+## Phase 4: Integration & Testing (1-2 Tage)
+
+### ✅ 4.1 End-to-End Happy-Path-Test (1h)
+**Test-Szenario**:
+```
+1. Bot: Begrüßung & Weichenstellung
+2. User: "Direkt Tarife"
+3. Bot: "Wann bist du geboren?"
+4. User: "15.05.1980"
+5. Bot: "Welche Versicherungssumme?"
+6. User: "5000 Euro"
+7. Bot: "Möchtest du filtern?"
+8. User: "Nein"
+9. Bot: [Tarifempfehlung mit Top 3]
+```
+- [ ] Manuell durchklicken
+- [ ] Logs prüfen
+- [ ] Debug-Panel validieren
+
+### ✅ 4.2 Edge-Case-Testing (2h)
+**Test-Szenarien**:
+- [ ] Ungültige Eingabe (z.B. "asdfgh" statt Datum)
+- [ ] Keine passenden Tarife gefunden
+- [ ] User nennt alle Parameter auf einmal
+- [ ] User möchte erst Infos, dann Tarife
+- [ ] Sehr lange Nachricht (> 500 Zeichen)
+
+### ✅ 4.3 Prompt-Optimierung (3h)
+- [ ] Logs analysieren (Bot-Antworten zu lang? Zu viele Emojis?)
+- [ ] System-Prompt anpassen
+- [ ] Interaction-Style-Prompt schärfen
+- [ ] Re-Test
+
+### ✅ 4.4 Debug-Panel-Validierung (30min)
+- [ ] System-Prompt vollständig sichtbar?
+- [ ] LLM-Response korrekt formatiert?
+- [ ] Collapsible funktioniert?
+
+### ✅ 4.5 Fehlerbehandlung (1h)
+- [ ] LLM-API-Fehler → Fallback-Message
+- [ ] Tarif-Datei nicht gefunden → Error-Logging
+- [ ] Netzwerk-Timeout → Retry-Logik (optional)
+
+### ✅ 4.6 Test-Dialoge dokumentieren (1h)
+- [ ] Mind. 3 Szenarien in `docs/test-scenarios.md` dokumentieren
+- [ ] Screenshots (optional)
+
+**Milestone 4**: ✅ Alle Haupt-Flows funktionieren stabil
+
+---
+
+## Phase 5: Feinschliff & Deployment (1 Tag)
+
+### ✅ 5.1 README.md schreiben (1h)
+- [ ] Setup-Anleitung
+- [ ] Screenshot des UI
+- [ ] Technologie-Stack
+- [ ] Nutzungshinweise
+
+### ✅ 5.2 .env.example erstellen (15min)
+- [ ] Template mit OPENAI_API_KEY=your_key_here
+- [ ] Alle Config-Variablen
+
+### ✅ 5.3 Deployment-Test (1h)
+- [ ] Frische Installation testen (Clean-Environment)
+- [ ] Setup-Anleitung durchgehen
+- [ ] Server starten: `python run.py`
+
+### ✅ 5.4 Demo-Präsentation vorbereiten (1h)
+- [ ] Live-Demo-Script
+- [ ] 3 User-Journeys vorbereiten
+- [ ] Debug-Panel-Erklärung
+
+### ✅ 5.5 Finale Abnahme (1h)
+- [ ] User-Test mit Produktmanager
+- [ ] Feedback sammeln
+- [ ] Nächste Schritte definieren
+
+**Milestone 5**: ✅ Prototyp funktionsfähig für interne Evaluierung
+
+---
+
+## Zusammenfassung
+
+| Phase | Dauer | Status | Deliverables |
+|-------|-------|--------|--------------|
+| **1** | 1-2 Tage | ✅ DONE | Projektstruktur, Tarif-Engine, Prompts |
+| **2** | 2-3 Tage | ✅ DONE | Flask-App, LLM-Client, API-Endpoints, Chatbot, Function Calling |
+| **3** | 2-3 Tage | ✅ DONE | HTML/CSS/JS, Chat-UI, Debug-Panel, Mobile-First |
+| **4** | 1-2 Tage | ⏳ TODO | E2E-Tests, Prompt-Tuning, Fehlerbehandlung |
+| **5** | 1 Tag | ⏳ TODO | README, Deployment, Demo |
+
+**Gesamt**: 7-11 Tage
+
+---
+
+## Nächster Schritt
+
+**START**: Phase 1.1 - Repository-Setup & Projektstruktur
