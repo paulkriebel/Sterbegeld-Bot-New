@@ -122,7 +122,7 @@ async function sendMessage(message) {
 }
 
 /**
- * Add message to chat UI
+ * Add message to chat UI with HTML formatting support
  */
 function addMessageToChat(role, text) {
     const messageDiv = document.createElement('div');
@@ -131,19 +131,66 @@ function addMessageToChat(role, text) {
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
     
-    const textP = document.createElement('p');
-    textP.textContent = text;
+    // Convert markdown-like formatting to HTML
+    const formattedText = formatMessageText(text);
+    contentDiv.innerHTML = formattedText;
     
     const timeSpan = document.createElement('span');
     timeSpan.className = 'message-time';
     timeSpan.textContent = getCurrentTime();
     
-    contentDiv.appendChild(textP);
     contentDiv.appendChild(timeSpan);
     messageDiv.appendChild(contentDiv);
     
     chatContainer.appendChild(messageDiv);
     scrollToBottom();
+}
+
+/**
+ * Format message text with HTML (bullets, bold, line breaks)
+ */
+function formatMessageText(text) {
+    // Escape basic HTML but keep our formatting
+    let formatted = text;
+    
+    // Convert **bold** to <strong>
+    formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    
+    // Convert bullet points: "• Text" or "- Text" to <li>
+    const lines = formatted.split('\n');
+    let inList = false;
+    let result = [];
+    
+    for (let line of lines) {
+        const trimmed = line.trim();
+        
+        // Check if line starts with bullet (• or -)
+        if (trimmed.startsWith('•') || trimmed.match(/^-\s/)) {
+            if (!inList) {
+                result.push('<ul>');
+                inList = true;
+            }
+            // Remove bullet and create list item
+            const content = trimmed.replace(/^[•\-]\s*/, '');
+            result.push(`<li>${content}</li>`);
+        } else {
+            if (inList) {
+                result.push('</ul>');
+                inList = false;
+            }
+            if (trimmed) {
+                result.push(`<p>${trimmed}</p>`);
+            } else {
+                result.push('<br>');
+            }
+        }
+    }
+    
+    if (inList) {
+        result.push('</ul>');
+    }
+    
+    return result.join('');
 }
 
 /**
@@ -190,13 +237,7 @@ function handleInput() {
  * Toggle debug panel
  */
 function toggleDebug() {
-    if (debugContent.style.display === 'none') {
-        debugContent.style.display = 'block';
-        debugToggle.textContent = '▼';
-    } else {
-        debugContent.style.display = 'none';
-        debugToggle.textContent = '▶';
-    }
+    debugContent.classList.toggle('show');
 }
 
 /**

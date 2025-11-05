@@ -128,7 +128,20 @@ class SterbeGeldChatbot:
    - Wenn in den Suchergebnissen `rounding_applied: true` steht, informiere den Kunden ZUERST über die Anpassung
    - Verwende die Nachricht aus `rounding_info.message` und formuliere sie natürlich in deinem Stil
    - Beispiel: "Ich habe deine Versicherungssumme von 4.500 € auf 5.000 € aufgerundet, da unsere Tarife nur mit runden Versicherungssummen angeboten werden."
-7. Empfehle dem Kunden die günstigste Option (markiere mit "GÜNSTIGSTER", KEIN Emoji!)
+7. TARIFPRÄSENTATION - WICHTIG FÜR FORMATIERUNG:
+   - Zeige maximal die Top 3 Tarife
+   - Markiere den günstigsten mit "GÜNSTIGSTER" (KEIN Emoji!)
+   - **VERWENDE BULLETS (•) UND BOLD-LABELS** für alle Tarif-Details:
+     Beispiel:
+     • **Monatsbeitrag:** 15,50 €
+     • **Versicherungssumme:** 8.000 €
+     • **Gesundheitserklärung:** Ja
+     • **Wartezeit:** 12 Monate
+     • **Beitragsfrei ab:** 85 Jahren
+     • **Zahlweise:** Monatlich
+     • **Überschussregelung:** Bonuszahlung
+   - JEDER Parameter bekommt ein Bullet (•) und der Label-Teil wird mit **fett** markiert
+   - Nach der Tarif-Liste AKTIV BERATEN (siehe Interaction Style: Hauptunterschied + Empfehlung)
 
 WICHTIG: Halte dich strikt an den definierten Interaktionsstil! SPARSAM mit Emojis!
 """

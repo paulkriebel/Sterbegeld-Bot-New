@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sophie - Sterbegeld-Berater</title>
+    <title>Sophie - Sterbegeld-Berater (TEST)</title>
     <style>
         * {
             margin: 0;
@@ -215,62 +215,24 @@
             margin-right: 8px;
         }
 
-        .message-content strong,
-        .message-content b {
+        .message-content strong {
             font-weight: 600;
         }
 
-        .message-content p {
-            margin: 6px 0;
-        }
-
-        /* Message Time */
-        .message-time {
-            display: block;
-            font-size: 11px;
-            color: #999;
-            margin-top: 4px;
-        }
-
-        /* Typing Indicator */
-        #typing-indicator {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
+        /* Button in Bot Message */
+        .bot-button {
             background: #FFFFFF;
+            color: #1967D2;
+            border: 1px solid #E0E0E0;
+            padding: 12px 20px;
             border-radius: 8px;
-            width: fit-content;
-            margin-bottom: 16px;
-        }
-
-        #typing-indicator.show {
-            display: flex;
-        }
-
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: #999;
-            border-radius: 50%;
-            animation: typingBounce 1.4s infinite;
-        }
-
-        .typing-dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typingBounce {
-            0%, 60%, 100% {
-                transform: translateY(0);
-            }
-            30% {
-                transform: translateY(-10px);
-            }
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 12px;
+            width: 100%;
+            text-align: center;
+            display: block;
         }
 
         /* Input Area */
@@ -283,7 +245,7 @@
             gap: 12px;
         }
 
-        #user-input {
+        .chat-input {
             flex: 1;
             background: #F5F5F5;
             border: 1px solid #E0E0E0;
@@ -292,11 +254,9 @@
             font-size: 15px;
             font-family: inherit;
             outline: none;
-            resize: none;
-            max-height: 100px;
         }
 
-        #send-btn {
+        .send-button {
             width: 36px;
             height: 36px;
             background: #1967D2;
@@ -308,16 +268,6 @@
             color: white;
             font-size: 18px;
             cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        #send-btn:disabled {
-            background: #CCC;
-            cursor: not-allowed;
-        }
-
-        #send-btn:not(:disabled):hover {
-            background: #1557B0;
         }
 
         /* Bottom Navigation */
@@ -346,6 +296,18 @@
 
         .nav-icon {
             font-size: 24px;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FF3B30;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: bold;
         }
 
         /* Home Indicator */
@@ -377,57 +339,6 @@
             background: #CCC;
             border-radius: 2px;
         }
-
-        /* Debug Panel (Hidden by default) */
-        .debug-panel {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            max-width: 400px;
-            max-height: 500px;
-            overflow-y: auto;
-            font-size: 12px;
-            z-index: 10000;
-            display: none;
-        }
-
-        .debug-panel.show {
-            display: block;
-        }
-
-        .debug-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #1967D2;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            z-index: 10001;
-        }
-
-        .debug-section {
-            margin-bottom: 15px;
-        }
-
-        .debug-section h4 {
-            margin-bottom: 5px;
-            color: #4285F4;
-        }
-
-        .debug-section pre {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 8px;
-            border-radius: 4px;
-            overflow-x: auto;
-            font-size: 11px;
-        }
     </style>
 </head>
 <body>
@@ -438,10 +349,11 @@
             <!-- Status Bar -->
             <div class="status-bar">
                 <div class="status-left">
-                    <span id="current-time">--:--</span>
+                    <span>11:35</span>
                 </div>
                 <div class="status-right">
                     <span>📶</span>
+                    <span>📡</span>
                     <span>🔋</span>
                 </div>
             </div>
@@ -455,31 +367,54 @@
                         <div class="sophie-name">Sophie</div>
                     </div>
                 </div>
-                <div class="menu-button" id="toggle-debug" title="Debug-Panel">⋮</div>
+                <div class="menu-button">⋮</div>
             </div>
 
             <!-- Chat Messages -->
-            <div class="chat-messages" id="chat-container">
-                <!-- Messages will be added here dynamically -->
-            </div>
+            <div class="chat-messages">
+                <!-- Bot Message 1 -->
+                <div class="message message-bot">
+                    <div class="message-content">
+                        Wie kann ich Ihnen heute helfen?
+                    </div>
+                </div>
 
-            <!-- Typing Indicator -->
-            <div id="typing-indicator">
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
+                <!-- User Message -->
+                <div class="message message-user">
+                    <div class="message-content">
+                        Ich suche neuen Internet-Vertrag
+                    </div>
+                </div>
+
+                <!-- Bot Message 2 - Example from Screenshot -->
+                <div class="message message-bot">
+                    <div class="message-content">
+                        Vielen Dank für Ihre Anfrage, Herr Kriebel!<br><br>
+                        Hier sind die Suchkriterien, die ich für Sie vorliegen habe:
+                        <ul>
+                            <li><strong>Adresse:</strong> Reichenbachstr. 10, 80469 München</li>
+                            <li><strong>Laufender Vertrag:</strong> Nein, Sie suchen einen neuen Vertrag</li>
+                            <li><strong>Tariftyp:</strong> Nur Internet (ohne TV-Option)</li>
+                            <li><strong>Youngster-Bonus:</strong> Nicht gewünscht</li>
+                            <li><strong>WLAN-Router:</strong> Nicht gewünscht</li>
+                        </ul>
+                        Möchten Sie auf Basis dieser Angaben passende Internet-Tarife angezeigt bekommen? Sie können mir gerne auch weitere Wünsche mitteilen, z. B. gewünschte Geschwindigkeit oder besondere Optionen.
+                    </div>
+                </div>
+
+                <!-- Bot Button -->
+                <div class="message message-bot">
+                    <button class="bot-button">
+                        Ja, zeigen Sie mir passende Tarife.
+                    </button>
+                </div>
             </div>
 
             <!-- Input Area -->
-            <form id="chat-form" class="chat-input-area">
-                <textarea 
-                    id="user-input" 
-                    placeholder="Nachricht eingeben..." 
-                    rows="1"
-                    autocomplete="off"
-                ></textarea>
-                <button type="submit" id="send-btn" disabled>↑</button>
-            </form>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" placeholder="Stellen Sie irgendeine Frage">
+                <button class="send-button">↑</button>
+            </div>
 
             <!-- Bottom Navigation -->
             <div class="bottom-nav">
@@ -491,9 +426,10 @@
                     <div class="nav-icon">📋</div>
                     <div>Aktivitäten</div>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" style="position: relative;">
                     <div class="nav-icon">📧</div>
                     <div>Mitteilungen</div>
+                    <span class="nav-badge">3</span>
                 </div>
                 <div class="nav-item">
                     <div class="nav-icon">👤</div>
@@ -512,39 +448,31 @@
         </div>
     </div>
 
-    <!-- Debug Panel -->
-    <div id="debug-content" class="debug-panel">
-        <div class="debug-section">
-            <h4>System Prompt</h4>
-            <pre id="debug-system-prompt">...</pre>
-        </div>
-        <div class="debug-section">
-            <h4>User Message</h4>
-            <pre id="debug-user-message">...</pre>
-        </div>
-        <div class="debug-section">
-            <h4>LLM Response</h4>
-            <pre id="debug-llm-response">...</pre>
-        </div>
-        <div class="debug-section">
-            <h4>Tokens Used</h4>
-            <pre id="debug-tokens">...</pre>
-        </div>
-    </div>
-
-    <script src="/static/js/chat.js"></script>
     <script>
-        // Update time every second
-        function updateTime() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('de-DE', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            document.getElementById('current-time').textContent = timeStr;
+        // Smooth scroll to bottom
+        const chatMessages = document.querySelector('.chat-messages');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Simple input handling
+        const input = document.querySelector('.chat-input');
+        const sendButton = document.querySelector('.send-button');
+
+        function sendMessage() {
+            const message = input.value.trim();
+            if (message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message message-user';
+                messageDiv.innerHTML = `<div class="message-content">${message}</div>`;
+                chatMessages.appendChild(messageDiv);
+                input.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
         }
-        updateTime();
-        setInterval(updateTime, 60000); // Update every minute
+
+        sendButton.addEventListener('click', sendMessage);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
     </script>
 </body>
 </html>
