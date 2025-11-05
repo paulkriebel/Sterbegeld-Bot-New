@@ -11,7 +11,7 @@ TARIFF_SEARCH_FUNCTION = {
         "properties": {
             "birth_date": {
                 "type": "string",
-                "description": "Customer's birth date in YYYY-MM-DD format"
+                "description": "Customer's birth date in German format: DD.MM.YYYY (e.g., 15.05.1980) or DD. Month YYYY (e.g., 15. Mai 1980). NEVER use YYYY-MM-DD format."
             },
             "coverage_amount": {
                 "type": "integer",

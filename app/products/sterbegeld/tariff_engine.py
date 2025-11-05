@@ -4,8 +4,181 @@ Handles filtering, ranking, and searching of insurance tariffs
 """
 import json
 import os
+import re
 from datetime import datetime, date
 from typing import List, Dict, Any, Optional
+
+
+# Valid insurance sums (Versicherungssummen) in EUR
+VALID_COVERAGE_AMOUNTS = [
+    1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000,
+    12500, 15000, 20000
+]
+
+# German month names mapping
+GERMAN_MONTHS = {
+    'januar': '01', 'februar': '02', 'märz': '03', 'april': '04',
+    'mai': '05', 'juni': '06', 'juli': '07', 'august': '08',
+    'september': '09', 'oktober': '10', 'november': '11', 'dezember': '12'
+}
+
+
+def needs_rounding(coverage_amount: int) -> bool:
+    """
+    Check if a coverage amount needs to be rounded to a valid value
+    
+    Args:
+        coverage_amount: Coverage amount in EUR
+        
+    Returns:
+        True if rounding is needed, False if it's already a valid amount
+    """
+    return coverage_amount not in VALID_COVERAGE_AMOUNTS
+
+
+def round_coverage_amount(coverage_amount: int) -> int:
+    """
+    Round coverage amount to the next valid insurance sum
+    
+    Rules:
+    - If amount is already valid, return as-is
+    - If amount is below minimum (1000), round up to 1000
+    - If amount is above maximum (20000), cap at 20000
+    - Otherwise, round UP to the next available valid amount
+    
+    Args:
+        coverage_amount: Desired coverage amount in EUR
+        
+    Returns:
+        Rounded coverage amount (one of VALID_COVERAGE_AMOUNTS)
+    """
+    # If already valid, return as-is
+    if coverage_amount in VALID_COVERAGE_AMOUNTS:
+        return coverage_amount
+    
+    # Cap at maximum
+    if coverage_amount > VALID_COVERAGE_AMOUNTS[-1]:
+        return VALID_COVERAGE_AMOUNTS[-1]
+    
+    # Round up to next valid amount
+    for valid_amount in VALID_COVERAGE_AMOUNTS:
+        if valid_amount >= coverage_amount:
+            return valid_amount
+    
+    # Fallback (should never reach here)
+    return VALID_COVERAGE_AMOUNTS[-1]
+
+
+def parse_german_date(date_str: str) -> str:
+    """
+    Parse German date formats and convert to ISO format (YYYY-MM-DD)
+    
+    Supported formats:
+    - DD.MM.YYYY (e.g., "15.05.1980")
+    - DD. Month YYYY (e.g., "05. Mai 1969", "15. Januar 1980")
+    - YYYY-MM-DD (ISO format as fallback)
+    
+    Args:
+        date_str: Date string in German format
+        
+    Returns:
+        Date in ISO format (YYYY-MM-DD)
+        
+    Raises:
+        ValueError: If date format is invalid or date doesn't exist
+    """
+    date_str = date_str.strip()
+    
+    # Try DD.MM.YYYY format
+    if re.match(r'^\d{1,2}\.\d{1,2}\.\d{4}$', date_str):
+        try:
+            parsed = datetime.strptime(date_str, '%d.%m.%Y')
+            return parsed.strftime('%Y-%m-%d')
+        except ValueError as e:
+            raise ValueError(f"Ungültiges Datum: {date_str}")
+    
+    # Try DD. Month YYYY format (e.g., "05. Mai 1969")
+    match = re.match(r'^(\d{1,2})\.\s*(\w+)\s+(\d{4})$', date_str, re.IGNORECASE)
+    if match:
+        day, month_name, year = match.groups()
+        month_name_lower = month_name.lower()
+        
+        if month_name_lower not in GERMAN_MONTHS:
+            raise ValueError(f"Unbekannter Monat: {month_name}")
+        
+        month = GERMAN_MONTHS[month_name_lower]
+        iso_date = f"{year}-{month}-{day.zfill(2)}"
+        
+        # Validate the date actually exists
+        try:
+            datetime.strptime(iso_date, '%Y-%m-%d')
+            return iso_date
+        except ValueError:
+            raise ValueError(f"Ungültiges Datum: {date_str}")
+    
+    # Try ISO format as fallback (YYYY-MM-DD)
+    if re.match(r'^\d{4}-\d{1,2}-\d{1,2}$', date_str):
+        try:
+            parsed = datetime.strptime(date_str, '%Y-%m-%d')
+            return parsed.strftime('%Y-%m-%d')
+        except ValueError:
+            raise ValueError(f"Ungültiges Datum: {date_str}")
+    
+    raise ValueError(f"Datumsformat nicht erkannt: {date_str}. Bitte verwende DD.MM.YYYY oder DD. Monat YYYY")
+
+
+def is_future_date(date_str: str) -> bool:
+    """
+    Check if a date (in ISO format YYYY-MM-DD) is in the future
+    
+    Args:
+        date_str: Date string in ISO format (YYYY-MM-DD)
+        
+    Returns:
+        True if date is in the future, False otherwise
+    """
+    try:
+        birth_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        return birth_date > date.today()
+    except ValueError:
+        return False
+
+
+def validate_birth_date(date_str: str) -> Dict[str, Any]:
+    """
+    Validate birth date (German format) and check if it's not in the future
+    
+    Args:
+        date_str: Date string in German format
+        
+    Returns:
+        Dictionary with validation result:
+        - valid: bool - Whether the date is valid
+        - iso_date: str - Date in ISO format (if valid)
+        - error: str - Error message (if invalid)
+    """
+    try:
+        # Parse German date to ISO format
+        iso_date = parse_german_date(date_str)
+        
+        # Check if date is in the future
+        if is_future_date(iso_date):
+            return {
+                'valid': False,
+                'error': 'Das Geburtsdatum liegt in der Zukunft. Bitte gib ein gültiges Geburtsdatum ein.'
+            }
+        
+        # Date is valid
+        return {
+            'valid': True,
+            'iso_date': iso_date
+        }
+        
+    except ValueError as e:
+        return {
+            'valid': False,
+            'error': str(e)
+        }
 
 
 def calculate_age_from_birthdate(birth_date_str: str) -> int:

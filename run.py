@@ -18,9 +18,9 @@ app = create_app(config_name)
 
 if __name__ == '__main__':
     # Development server
-    print(f"\n🚀 Sterbegeld Bot starting on http://localhost:5000\n")
+    print(f"\n🚀 Sterbegeld Bot starting on http://localhost:5001\n")
     app.run(
         host='0.0.0.0',
-        port=5000,
+        port=5001,
         debug=app.config['DEBUG']
     )

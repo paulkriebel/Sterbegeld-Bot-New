@@ -59,7 +59,8 @@ def chat():
             }), 400
         
         user_message = data['message']
-        conversation_history = data.get('conversation_history', [])
+        # Accept both 'history' (new) and 'conversation_history' (legacy)
+        conversation_history = data.get('history', data.get('conversation_history', []))
         
         # Validate message length
         max_length = current_app.config.get('MAX_MESSAGE_LENGTH', 500)

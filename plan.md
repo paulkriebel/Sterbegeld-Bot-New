@@ -80,7 +80,30 @@
 - [x] `data/sterbegeld/prompts/tariff_table.txt` ✅
 - [x] `data/sterbegeld/prompts/interaction_style.txt` ✅
 
-**Milestone 1**: ✅ Tarifdaten-Modell validiert, Beispiel-Tarife durchsuchbar, Prompts bereit!
+### ✅ 1.6 Product Info YAML Optimierung (2h) - DONE
+**Ziel**: Faktisches Wissen für kompetente Kundenberatung erweitern
+- [x] Bestattungskosten detailliert (inkl. Beispielaufstellung) ✅
+- [x] Abgrenzung zu anderen Produkten (Risikoleben, Vorsorgevertrag, Sparen) ✅
+- [x] Wartezeiten & Unfalltod (mit konkreten Beispielen) ✅
+- [x] Vertragsänderungen & Kündigung (inkl. Alternativen) ✅
+- [x] Alter & Beitragsbeispiele (30-70 Jahre) ✅
+- [x] Überschussbeteiligung (detailliert mit Mechanismen) ✅
+- [x] Bezugsberechtigung (alle Varianten erklärt) ✅
+- [x] Neue logische Struktur (10 Hauptabschnitte) ✅
+
+**Neue YAML-Struktur**:
+1. GRUNDLAGEN - Was ist eine Sterbegeldversicherung?
+2. KOSTEN & KALKULATION - Was kostet eine Bestattung und die Versicherung?
+3. PRODUKTVARIANTEN - Welche Optionen gibt es?
+4. VERTRAGSMANAGEMENT - Wie kann ich den Vertrag ändern oder beenden?
+5. BETEILIGTE PERSONEN - Wer ist wer im Vertrag?
+6. ABGRENZUNG - Was ist der Unterschied zu anderen Produkten?
+7. ZIELGRUPPEN & SINNHAFTIGKEIT - Für wen ist es sinnvoll?
+8. RECHTLICHER & SOZIALER RAHMEN
+9. LEISTUNGSABWICKLUNG - Was passiert im Todesfall?
+10. PRAKTISCHE INFORMATIONEN
+
+**Milestone 1**: ✅ Tarifdaten-Modell validiert, Beispiel-Tarife durchsuchbar, Prompts bereit, Product Info optimiert!
 
 ---
 
@@ -229,6 +252,52 @@
 ---
 
 ## Phase 4: Integration & Testing (1-2 Tage)
+
+### ✅ 4.0 Versicherungssummen-Rundung (2h) - DONE
+**Feature**: Automatische Rundung zu gültigen Versicherungssummen
+- [x] TEST: `test_round_coverage_amount()` - Rundungslogik ✅
+- [x] TEST: `test_needs_rounding()` - Erkennung ungültiger Werte ✅
+- [x] CODE: `round_coverage_amount()` und `needs_rounding()` Funktionen ✅
+- [x] CODE: Integration in Chatbot `_execute_function()` ✅
+- [x] CODE: System-Prompt-Update für Kundenbenachrichtigung ✅
+- [x] TEST: Integration tests für Edge Cases (< 1000, > 20000, 10k-12.5k) ✅
+- [x] TEST: End-to-End Test mit LLM (4500€ → 5000€) ✅
+
+**Gültige Versicherungssummen**: 1.000, 2.000, 3.000, 4.000, 5.000, 6.000, 7.000, 8.000, 9.000, 10.000, 12.500, 15.000, 20.000 €
+
+**Regeln**:
+- Bei ungültigen Werten: Aufrundung zur nächsthöheren gültigen Summe
+- Bei Werten > 20.000€: Begrenzung auf 20.000€
+- Kundenbenachrichtigung bei jeder Rundung
+- Tests: 16 passed ✅
+
+### ✅ 4.0b Deutsche Datumsformate & Zukunftsdaten-Validierung (2h) - DONE
+**Feature**: Deutsche Datumsformate und Validierung gegen Zukunftsdaten
+- [x] TEST: `test_parse_german_date_dd_mm_yyyy()` - DD.MM.YYYY Format ✅
+- [x] TEST: `test_parse_german_date_with_text_month()` - DD. Monat YYYY ✅
+- [x] TEST: `test_is_future_date()` - Erkennung von Zukunftsdaten ✅
+- [x] TEST: `test_validate_birth_date_valid()` - Gültige Daten ✅
+- [x] TEST: `test_validate_birth_date_future()` - Zukunftsdaten ablehnen ✅
+- [x] CODE: `parse_german_date()` - Parsing deutscher Datumsformate ✅
+- [x] CODE: `is_future_date()` - Zukunfts-Check ✅
+- [x] CODE: `validate_birth_date()` - Komplette Validierung ✅
+- [x] CODE: Integration in Chatbot `_execute_function()` ✅
+- [x] CODE: System-Prompt-Update für deutsche Formate ✅
+- [x] CODE: Function Definition Update (kein ISO-Format) ✅
+- [x] TEST: E2E Test - Bot verwendet deutsche Formate ✅
+- [x] TEST: E2E Test - Zukunftsdaten werden freundlich abgelehnt ✅
+- [x] TEST: E2E Test - Deutsche Daten werden korrekt geparst ✅
+
+**Unterstützte Formate**:
+- DD.MM.YYYY (z. B. "15.05.1980")
+- DD. Monat YYYY (z. B. "15. Mai 1980")
+- ISO-Format als Fallback (intern)
+
+**Validierung**:
+- Zukunftsdaten werden abgelehnt
+- Freundliche Fehlermeldung an Kunden
+- Automatische Konvertierung zu ISO-Format intern
+- Tests: 24 passed ✅
 
 ### ✅ 4.1 End-to-End Happy-Path-Test (1h)
 **Test-Szenario**:

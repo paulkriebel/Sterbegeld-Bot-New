@@ -196,3 +196,47 @@ def test_search_tariffs_integration():
     # Alle zurückgegebenen Tarife sollten keine Gesundheitserklärung erfordern
     for tariff in result:
         assert tariff['health_declaration_required'] == False
+
+
+def test_round_coverage_amount():
+    """Test rounding of coverage amounts to valid insurance sums"""
+    from app.products.sterbegeld.tariff_engine import round_coverage_amount
+    
+    # Test exact matches (should not round)
+    assert round_coverage_amount(1000) == 1000
+    assert round_coverage_amount(5000) == 5000
+    assert round_coverage_amount(20000) == 20000
+    
+    # Test rounding up
+    assert round_coverage_amount(1500) == 2000
+    assert round_coverage_amount(4500) == 5000
+    assert round_coverage_amount(7200) == 8000
+    assert round_coverage_amount(11000) == 12500
+    assert round_coverage_amount(13000) == 15000
+    assert round_coverage_amount(18000) == 20000
+    
+    # Test edge cases
+    assert round_coverage_amount(500) == 1000  # Below minimum
+    assert round_coverage_amount(25000) == 20000  # Above maximum
+    assert round_coverage_amount(30000) == 20000  # Way above maximum
+    
+    # Test between 10k and 12.5k
+    assert round_coverage_amount(10001) == 12500
+    assert round_coverage_amount(11500) == 12500
+
+
+def test_needs_rounding():
+    """Test detection of whether a coverage amount needs rounding"""
+    from app.products.sterbegeld.tariff_engine import needs_rounding
+    
+    # Valid amounts should not need rounding
+    assert needs_rounding(1000) == False
+    assert needs_rounding(5000) == False
+    assert needs_rounding(12500) == False
+    assert needs_rounding(20000) == False
+    
+    # Invalid amounts should need rounding
+    assert needs_rounding(1500) == True
+    assert needs_rounding(4500) == True
+    assert needs_rounding(25000) == True
+    assert needs_rounding(500) == True
