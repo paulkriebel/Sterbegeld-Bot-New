@@ -103,7 +103,56 @@
 9. LEISTUNGSABWICKLUNG - Was passiert im Todesfall?
 10. PRAKTISCHE INFORMATIONEN
 
-**Milestone 1**: ✅ Tarifdaten-Modell validiert, Beispiel-Tarife durchsuchbar, Prompts bereit, Product Info optimiert!
+### ✅ 1.7 Interaction Style Optimierung (2h) - DONE
+**Ziel**: Bot-Verhalten kompetenter, empathischer und effizienter gestalten
+- [x] **EMPATHIE & SENSIBILITÄT** (Must-Have) ✅
+  - Angemessene Formulierungen (nicht "wenn du stirbst")
+  - Erkennen emotionaler Signale (Unsicherheit, Trauer, finanzielle Sorgen)
+  - Respektvoller Umgang mit sensiblem Thema
+
+- [x] **GUIDANCE BEI UNSICHERHEIT** (Must-Have) ✅
+  - Proaktive Hilfe bei Versicherungssummen-Wahl
+  - Orientierung geben (7.000-10.000 € Durchschnitt)
+  - Konkrete Empfehlung aussprechen (8.000 €)
+  - Filter-Erklärungen kurz und verständlich
+
+- [x] **DOS & DON'TS** (Must-Have) ✅
+  - Klare Regeln was Bot tun/nicht tun darf
+  - Besondere Vorsicht bei Gesundheits-/Rechtsfragen
+  - ISO-Format verboten in Kundenansprache
+
+- [x] **MEHRWERTBERATUNG** (Should-Have) ✅
+  - Nach Tarif-Präsentation: Unterschiede aktiv erklären
+  - Altersspezifische Empfehlungen (18-40, 40-60, 60-75, 75+)
+  - Proaktive nächste Schritte statt passives "Weitere Infos?"
+
+- [x] **EINWANDBEHANDLUNG** (Should-Have) ✅
+  - "Zu teuer" → Kleinere Summen, Perspektive geben
+  - "Muss nachdenken" → Respektieren, Info anbieten
+  - "Brauche ich das?" → Aufklären statt verkaufen
+  - "Zu jung/alt?" → Ehrlich beraten
+
+- [x] **QUALITÄTSKRITERIEN** ✅
+  - Längenkontrolle (max. 3-4 Sätze)
+  - Checkliste für jede Antwort
+  - Positiv formulieren
+
+**Neue Struktur** (7 Hauptabschnitte):
+1. GRUNDPRINZIPIEN - Tonalität & Klarheit
+2. EMPATHIE & SENSIBILITÄT - Umgang mit sensiblem Thema
+3. GESPRÄCHSABLAUF (6 Phasen) - Mit Hilfestellungen
+4. EINWANDBEHANDLUNG - Professionelle Reaktionen
+5. DOS & DON'TS - Klare Regeln
+6. QUALITÄTSKRITERIEN - Was macht eine gute Antwort aus
+7. BEISPIEL-DIALOGE - 5 Szenarien
+
+**Verbesserungen messbar**:
+- System-Prompt: 24.743 → 35.434 Zeichen (+44%)
+- Bot gibt jetzt proaktiv Orientierung bei Unsicherheit ✅
+- Bot erklärt Unterschiede zwischen Tarifen aktiv ✅
+- Bot reagiert empathisch auf emotionale Signale ✅
+
+**Milestone 1**: ✅ Tarifdaten-Modell validiert, Beispiel-Tarife durchsuchbar, Prompts optimiert, Product Info erweitert, Interaction Style professionalisiert!
 
 ---
 
