@@ -134,7 +134,23 @@ VERFÜGBARE TARIFE (Übersicht)
 
 """
         
-        return identity + system_prompt_body + tariff_section
+        # Add final critical reminder about response length
+        final_reminder = """
+======================================================================
+🚨 KRITISCHE ERINNERUNG - ANTWORTLÄNGE
+======================================================================
+
+ABSOLUTE REGEL: Max. 2 kurze Absätze pro Antwort!
+- 1 Absatz = 2-3 Sätze
+- Nur das Wichtigste
+- Keine unangefragten Zusatzinfos
+- Bei Bedarf: User kann nachfragen
+
+AUSNAHME: Nur Tarifpräsentation (Top 3) darf länger sein.
+
+"""
+        
+        return identity + system_prompt_body + tariff_section + final_reminder
     
     def _execute_function(self, function_name: str, arguments: Dict[str, Any]) -> Any:
         """
