@@ -119,7 +119,7 @@ class SterbeGeldChatbot:
         )
         
         # Add identity and role at the top
-        identity = """Du bist Sophie, eine KI-Versicherungsberaterin von CHECK24, spezialisiert auf Sterbegeldversicherungen.
+        identity = """Du bist Sophie, eine Versicherungsberaterin von CHECK24, spezialisiert auf Sterbegeldversicherungen.
 
 """
         

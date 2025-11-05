@@ -222,42 +222,105 @@
 - 🎯 **Clarity**: Clear separation of concerns (Universal → Product → Workflow)
 - 🎯 **Testability**: Each layer independently testable
 
-### ✅ 1.10 Neutrale Post-Tarif-Kommunikation - CHECK24-Neutralität (2h) - DONE
-**Ziel**: Umstellung von wertenden Empfehlungen zu neutraler, faktenbasierter Orientierung
+### ✅ 1.10 Workflow Flexibilisierung + CHECK24-Neutralität (3h) - DONE
+**Ziel**: Flexible, ziel-orientierte Konversation + neutrale, faktenbasierte Post-Tarif-Kommunikation
+
+**Teil A: Workflow Flexibilisierung**
 
 **Problem mit alter Struktur**:
+- Zu mechanisch und formularbasiert (starre 6 Phasen)
+- Ineffizient: Auch schnelle User müssen durch alle Phasen
+- Ignoriert User-Input, der mehrere Infos gleichzeitig gibt
+- Unnatürliche Konversation
+
+**Neue Struktur**:
+- **Ziel-orientiert**: Klares Ziel (Tarif-Präsentation) statt starre Phasen
+- **Adaptiv**: LLM nutzt alle gegebenen Infos, fragt nicht doppelt
+- **Effizient**: Springt direkt zum Ziel, wenn beide Pflicht-Parameter vorhanden
+- **Natürlich**: Flüssige Konversation statt mechanisches Abfragen
+
+**Teil B: CHECK24-Neutralität**
+
+**Problem mit alter Post-Tarif-Kommunikation**:
 - Zu direktiv: "Tarif X ist besser", "Mit 45 solltest du..."
 - Rechtlich problematisch: Unerlaubte Versicherungsberatung
 - Nicht CHECK24-konform: Vergleichsportal sollte neutral sein
 - Lenkt Kundenentscheidung statt zu informieren
 
-**Neue Struktur**:
+**Neue Post-Tarif-Struktur**:
 - **CHECK24-Neutral**: Keine Empfehlungen, nur Fakten
 - **Faktenbasiert**: Unterschiede ohne Wertung benennen
 - **Empowernd**: Offene Fragen, User behält Kontrolle
 - **Compliance**: Vermeidet rechtliche Risiken
 
 **Implementierung**:
-- ✅ `behavior.txt` Phase 5 komplett überarbeitet
+- ✅ `behavior.txt` komplett umgeschrieben
+- ✅ "KONVERSATIONS-PRINZIPIEN" statt "6 Phasen"
 - ✅ "NEUTRALE ORIENTIERUNG" statt "MEHRWERTBERATUNG"
+- ✅ 5 Beispiel-Dialoge für verschiedene User-Typen
+- ✅ Optionale Filter nur bei Bedarf (nicht aktiv anbieten)
 - ✅ Alle Wertungen entfernt ("besser", "top", "empfehlenswert")
 - ✅ Altersspezifische Empfehlungen entfernt
 - ✅ Direktvergleiche entfernt ("Tarif 1 vs. Tarif 2")
 - ✅ `output_format.txt` angepasst mit klaren Negativbeispielen
-- ✅ "Sie"-Form durchgängig wiederhergestellt
+- ✅ "Sie"-Form durchgängig
+- ✅ Test aktualisiert (`test_layer_content_presence`)
 
-**Neue Post-Tarif-Struktur**:
+**Neue Workflow-Struktur**:
+1. WORKFLOW-ZIEL (klar definiert)
+2. PFLICHT-PARAMETER (explizit)
+3. KONVERSATIONS-PRINZIPIEN (4 Hauptprinzipien)
+4. TARIF-PRÄSENTATION mit neutraler Kommunikation
+5. BEISPIEL-DIALOGE (5 Szenarien)
+
+**Post-Tarif-Kommunikation**:
 1. Kurze Kontext-Bestätigung (1 Satz)
 2. Faktische Unterschiede (OHNE Wertung)
 3. Offene, empowernde Frage (User-Kontrolle)
 
 **Vorteile**:
+- ⚡ **Schneller**: User können beide Parameter sofort geben
+- 🧠 **Intelligenter**: LLM kann Alter → Geburtsjahr berechnen
+- 💬 **Natürlicher**: Keine mechanischen "Phase X"-Übergänge
+- 🎯 **Fokussierter**: Optionale Filter nur wenn wirklich nötig
 - ⚖️ **Rechtskonform**: Keine unerlaubte Beratung
 - 🤝 **Vertrauenswürdig**: Neutral wie Check24-Standard
 - 💪 **Empowernd**: User trifft informierte Entscheidung
 - 📊 **Faktenfokus**: Objektive Informationen statt Meinungen
 
-**Milestone 1**: ✅ Tarifdaten-Modell validiert, Beispiel-Tarife durchsuchbar, Prompts optimiert, Product Info erweitert, Interaction Style professionalisiert, Frontend modernisiert, Layered Architecture implementiert, Neutrale Kommunikation etabliert!
+### ✅ 1.11 Offene Begrüßung + Intent-Erkennung (1h) - DONE
+**Ziel**: Flexible, offene Begrüßung die nicht nur Tarifsuche suggeriert + intelligente Intent-Erkennung
+
+**Problem mit alter Begrüßung**:
+- Zu spezifisch: "Möchtest du direkt Tarife finden oder Fragen stellen?"
+- Ignoriert andere legitime Anliegen (Kündigung, Trauerfall, etc.)
+- Zu direktiv und einschränkend
+
+**Neue Lösung**:
+- **Offene Begrüßung**: "Hallo! Ich bin Sophie, Ihre Beraterin für Sterbegeldversicherungen. Wie kann ich Ihnen heute helfen?"
+- **Intent-Erkennung**: LLM erkennt Intent aus erster User-Nachricht und reagiert entsprechend
+- **Keine "KI"-Erwähnung**: Nur "Beraterin", nicht "KI-Beraterin"
+
+**Implementierung**:
+- ✅ `chat.js` Begrüßung geändert (Zeile 21)
+- ✅ `behavior.txt` mit Intent-Erkennung ergänzt (5 Intent-Typen)
+- ✅ `chatbot.py` Identity angepasst (kein "KI"-Präfix)
+
+**Erkannte Intent-Typen**:
+1. **Tarif-Vergleich** (Hauptfall) → Starte Workflow
+2. **Fragen/Information** → Beantworte, leite zu Tarifen
+3. **Bestandskunde** (Out-of-Scope) → Höflich zu Kundenservice weiterleiten
+4. **Trauerfall** (Sensibel) → Empathisch reagieren, zu Versicherer leiten
+5. **Unklar** → Klärende Frage stellen
+
+**Vorteile**:
+- 🎯 **Flexibel**: Offen für alle Anliegen
+- 🧠 **Intelligent**: LLM routiert basierend auf Intent
+- 🤝 **Professionell**: Keine falschen Erwartungen
+- 💬 **Natürlich**: User formuliert frei
+- 🚀 **Skalierbar**: Weitere Intents einfach ergänzbar
+
+**Milestone 1**: ✅ Tarifdaten-Modell validiert, Beispiel-Tarife durchsuchbar, Prompts optimiert, Product Info erweitert, Interaction Style professionalisiert, Frontend modernisiert, Layered Architecture implementiert, Flexibler & neutraler Workflow etabliert, Offene Begrüßung mit Intent-Erkennung!
 
 ---
 

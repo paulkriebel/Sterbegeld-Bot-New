@@ -18,7 +18,7 @@ const debugContent = document.getElementById('debug-content');
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     // Add welcome message
-    addMessageToChat('bot', 'Hallo! Möchtest du direkt passende Tarife finden, oder hast du zunächst Fragen zu Sterbegeldversicherungen?');
+    addMessageToChat('bot', 'Hallo! Ich bin Sophie, Ihre Beraterin für Sterbegeldversicherungen. Wie kann ich Ihnen heute helfen?');
     
     // Setup event listeners
     chatForm.addEventListener('submit', handleSubmit);

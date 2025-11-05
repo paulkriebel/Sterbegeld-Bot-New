@@ -69,9 +69,9 @@ class TestHierarchyComposer:
         assert "EMPATHIE" in prompt or "Empathie" in prompt
         assert "sterbegeld" in prompt.lower()
         
-        # Workflow layer content
-        assert "GESPRÄCHSABLAUF" in prompt or "Gesprächsablauf" in prompt
-        assert "Phase" in prompt
+        # Workflow layer content (updated for flexible workflow structure)
+        assert "KONVERSATIONS-PRINZIPIEN" in prompt or "WORKFLOW-ZIEL" in prompt
+        assert "PFLICHT-PARAMETER" in prompt
     
     def test_determine_workflow_default(self, composer):
         """Test workflow determination with default workflow"""
