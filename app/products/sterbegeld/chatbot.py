@@ -8,6 +8,7 @@ import yaml
 from typing import List, Dict, Any, Optional
 
 from app.core.llm_client import LLMClient
+from app.core.prompt_builder import HierarchyComposer
 from app.products.sterbegeld.functions import AVAILABLE_FUNCTIONS
 from app.products.sterbegeld.tariff_engine import search_tariffs
 
@@ -27,6 +28,8 @@ class SterbeGeldChatbot:
             api_key: OpenAI API key
             model: LLM model name
         """
+        from pathlib import Path
+        self.data_dir = Path('data/sterbegeld')  # Legacy path for tariff_table.txt
         self.llm_client = LLMClient(api_key=api_key, model=model)
         self.system_prompt = self._build_system_prompt()
         logger.info("SterbeGeldChatbot initialized")
@@ -85,67 +88,53 @@ class SterbeGeldChatbot:
     
     def _build_system_prompt(self) -> str:
         """
-        Build system prompt from templates
-        Combines: product_info (YAML) + tariff_table + interaction_style
+        Build system prompt using the new Hierarchical Architecture.
+        
+        NEW ARCHITECTURE (3 Layers):
+        - Layer 1: Universal rules for all insurance chatbots
+        - Layer 2: Product-specific rules (Sterbegeld)
+        - Layer 3: Workflow-specific behavior (Tariff Comparison)
+        
+        Returns:
+            Complete system prompt with all layers composed
         """
-        # Load structured product info from YAML
-        product_data = self._load_yaml_file('product_info.yaml')
-        product_logic = self._yaml_to_text(product_data['sterbegeldversicherung'])
+        # Initialize HierarchyComposer
+        from pathlib import Path
+        composer = HierarchyComposer(data_dir='data')
         
+        # Load product info YAML for knowledge injection
+        product_info_path = Path('data/products/sterbegeld/knowledge/product_info.yaml')
+        product_info = None
+        if product_info_path.exists():
+            with open(product_info_path, 'r', encoding='utf-8') as f:
+                product_info = yaml.safe_load(f)
+        
+        # Build complete system prompt with all layers
+        # Product: "sterbegeld"
+        # Workflow: "tariff_info_comparison" (default for now)
+        system_prompt_body = composer.build_system_prompt(
+            product_id="sterbegeld",
+            workflow_id="tariff_info_comparison",
+            product_info=product_info
+        )
+        
+        # Add identity and role at the top
+        identity = """Du bist Sophie, eine KI-Versicherungsberaterin von CHECK24, spezialisiert auf Sterbegeldversicherungen.
+
+"""
+        
+        # Add tariff table (still needed for available tariffs overview)
         tariff_table = self._load_prompt_file('tariff_table.txt')
-        interaction_style = self._load_prompt_file('interaction_style.txt')
-        
-        system_prompt = f"""Du bist Sophie, eine KI-Versicherungsberaterin von CHECK24, spezialisiert auf Sterbegeldversicherungen.
+        tariff_section = f"""
+======================================================================
+VERFÜGBARE TARIFE (Übersicht)
+======================================================================
 
-# 1. PRODUKTLOGIK
-{product_logic}
-
-# 2. VERFÜGBARE TARIFE
 {tariff_table}
 
-# 3. INTERAKTIONSSTIL
-{interaction_style}
-
-# 4. DEINE AUFGABE
-1. WEICHENSTELLUNG: Frage zuerst, ob User direkt Tarife finden möchte ODER erst Fragen/Infos hat
-2. PFLICHT-PARAMETER erfassen (BEIDE ZWINGEND):
-   - Geburtsdatum - WICHTIG: Verwende IMMER deutsche Datumsformate:
-     * DD.MM.YYYY (z. B. "15.05.1980")
-     * DD. Monat JJJJ (z. B. "15. Mai 1980")
-     * NIEMALS das ISO-Format YYYY-MM-DD in der Kundenansprache verwenden!
-   - Gewünschte Versicherungssumme
-3. OPTIONAL-PARAMETER aktiv anbieten:
-   - Frage: "Möchtest du die Ergebnisse filtern?"
-   - Beitragsfrei ab, Gesundheitserklärung, Wartezeit, Überschussregelung, Zahlweise
-   - Falls User "nein": Sofort tariff_search() aufrufen
-4. Rufe die Funktion `tariff_search` auf, um passende Tarife zu finden
-5. GEBURTSDATUM-VALIDIERUNG:
-   - Wenn die Funktion `tariff_search` einen Fehler zurückgibt (error: true), dann:
-     * Gib die Fehlermeldung freundlich an den Kunden weiter
-     * Frage nach dem korrekten Geburtsdatum im deutschen Format
-     * Beispiel: "Das Datum liegt in der Zukunft. Bitte gib dein richtiges Geburtsdatum ein (z. B. 15.05.1980)."
-6. VERSICHERUNGSSUMMEN-RUNDUNG:
-   - Wenn in den Suchergebnissen `rounding_applied: true` steht, informiere den Kunden ZUERST über die Anpassung
-   - Verwende die Nachricht aus `rounding_info.message` und formuliere sie natürlich in deinem Stil
-   - Beispiel: "Ich habe deine Versicherungssumme von 4.500 € auf 5.000 € aufgerundet, da unsere Tarife nur mit runden Versicherungssummen angeboten werden."
-7. TARIFPRÄSENTATION - WICHTIG FÜR FORMATIERUNG:
-   - Zeige maximal die Top 3 Tarife
-   - Markiere den günstigsten mit "GÜNSTIGSTER" (KEIN Emoji!)
-   - **VERWENDE BULLETS (•) UND BOLD-LABELS** für alle Tarif-Details:
-     Beispiel:
-     • **Monatsbeitrag:** 15,50 €
-     • **Versicherungssumme:** 8.000 €
-     • **Gesundheitserklärung:** Ja
-     • **Wartezeit:** 12 Monate
-     • **Beitragsfrei ab:** 85 Jahren
-     • **Zahlweise:** Monatlich
-     • **Überschussregelung:** Bonuszahlung
-   - JEDER Parameter bekommt ein Bullet (•) und der Label-Teil wird mit **fett** markiert
-   - Nach der Tarif-Liste AKTIV BERATEN (siehe Interaction Style: Hauptunterschied + Empfehlung)
-
-WICHTIG: Halte dich strikt an den definierten Interaktionsstil! SPARSAM mit Emojis!
 """
-        return system_prompt
+        
+        return identity + system_prompt_body + tariff_section
     
     def _execute_function(self, function_name: str, arguments: Dict[str, Any]) -> Any:
         """

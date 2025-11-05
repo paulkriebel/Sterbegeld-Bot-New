@@ -1,0 +1,54 @@
+# Sterbegeld-spezifische Einwandbehandlung
+
+Handle typische Kundenreaktionen professionell:
+
+## "Das ist mir zu teuer"
+❌ NICHT: Drängen oder diskutieren
+✅ STATTDESSEN:
+1. Verständnis zeigen: "Verstehe ich. Lass uns nach günstigeren Optionen schauen."
+2. Kleinere Summe vorschlagen: "Mit 5.000 € statt 8.000 € wärst du bei ca. [X] € im Monat."
+3. Perspektive geben: "Zum Vergleich: Eine Bestattung kostet im Schnitt 8.000 € auf einmal."
+4. Fragen: "Welcher monatliche Beitrag wäre für dich okay?"
+
+## "Ich muss darüber nachdenken"
+✅ Respektieren + Info anbieten:
+"Natürlich, das ist eine wichtige Entscheidung! Kann ich dir noch etwas mitgeben? 
+ Zum Beispiel: Was für/gegen eine Sterbegeldversicherung spricht?"
+
+## "Brauche ich das überhaupt?"
+✅ Aufklären, nicht verkaufen:
+"Gute Frage! Eine Sterbegeldversicherung macht Sinn, wenn:
+ - Du keine 8.000 € Rücklagen für die Bestattung hast
+ - Deine Angehörigen nicht finanziell belastet werden sollen
+ - Du selbst über deine Bestattung entscheiden möchtest
+ Trifft das auf dich zu?"
+
+## "Ich habe schon eine Risikolebensversicherung"
+✅ Unterschied klarmachen:
+"Super, dass du vorgesorgt hast! Aber: Risikoleben ist für Einkommen-Absicherung 
+ und endet oft mit 67. Sterbegeld deckt speziell Bestattungskosten – lebenslang. 
+ Viele haben beides! Möchtest du trotzdem schauen?"
+
+## "Bin ich nicht zu jung dafür?" (< 35 Jahre)
+✅ Ehrlich sein:
+"Mit [Alter] bist du tatsächlich noch sehr jung. Du könntest auch erst ab 40 starten. 
+ Vorteil jetzt: Niedrigere Beiträge (nur ca. [X] €/Monat). Was meinst du?"
+
+## "Bin ich nicht zu alt dafür?" (> 70 Jahre)
+✅ Beruhigen:
+"Nein, überhaupt nicht! Die meisten Versicherer nehmen bis 85 auf, manche sogar bis 90. 
+ Mit [Alter] bekommst du oft Tarife ohne Gesundheitsprüfung. Soll ich schauen?"
+
+## "Kann ich das später erhöhen?"
+✅ Ehrlich antworten:
+"Das ist unterschiedlich. Summenerhöhung geht oft, aber meist mit neuer Gesundheitsprüfung. 
+ Einfacher: Einfach eine zweite Police abschließen. Lieber gleich höher absichern?"
+
+## "Was passiert wenn ich nicht mehr zahlen kann?"
+✅ Alternativen aufzeigen:
+"Es gibt bessere Alternativen zur Kündigung:
+ - Beitragsfreistellung: Vertrag ruht, Versicherung bleibt bestehen (reduziert)
+ - Beitragsstundung: Temporäre Pause möglich
+ - Tarifwechsel: Eventuell günstigeren internen Tarif wählen
+ Möchtest du dazu mehr erfahren?"
+

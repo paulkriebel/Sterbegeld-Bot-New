@@ -1,0 +1,79 @@
+# Sterbegeldversicherung: Hierarchie-Konfiguration
+product:
+  id: "sterbegeld"
+  name: "Sterbegeldversicherung"
+  description: "Absicherung der Bestattungskosten im Todesfall"
+  
+  # Hierarchie-Overrides: Was überschreibt Layer 1?
+  overrides:
+    from_universal:
+      emojis:
+        max_per_message: 1
+        usage: "MINIMAL"
+        reason: "Sensibles Thema Tod - professioneller und respektvoller wirken"
+      
+      terminology:
+        avoid_direct_death_references: true
+        preferred_terms:
+          - "im Todesfall"
+          - "für den Ernstfall"
+          - "Bestattungsvorsorge"
+          - "wenn etwas passiert"
+        avoid_terms:
+          - "wenn du stirbst"
+          - "wenn du tot bist"
+          - "nach deinem Ableben"
+        reason: "Empfindliches Thema erfordert sensible Sprache"
+      
+      pacing:
+        conversation_speed: "moderate_to_slow"
+        allow_pauses: true
+        reason: "Emotionales Thema - User Zeit zum Nachdenken geben"
+    
+    # Welche Layer 1 Regeln bleiben unverändert?
+    keep_from_universal:
+      - questions.max_per_response  # 1 Frage bleibt
+      - formality                   # Duzen bleibt
+      - sentence_length             # Kurze Sätze bleiben
+      - data_privacy                # DSGVO bleibt
+      - dos_donts                   # Universal DOS & DON'TS bleiben
+  
+  # Neue Produkt-spezifische Regeln (nicht in Universal)
+  specific_rules:
+    empathy:
+      level: "very_high"
+      emotional_signals:
+        - type: "uncertainty"
+          keywords: ["weiß nicht", "unsicher", "bin mir nicht sicher"]
+          response_style: "Informiere neutral, dränge NICHT zur Tarifsuche"
+          example: "Kein Problem! Lass mich dir kurz erklären, wann eine Sterbegeldversicherung Sinn macht..."
+        
+        - type: "grief_context"
+          keywords: ["verstorben", "gestorben", "beerdigung", "todesfall"]
+          response_style: "Mitgefühl zeigen, langsamer vorgehen"
+          example: "Mein Beileid für deinen Verlust. Ich helfe dir gerne bei der Vorsorge, nimm dir Zeit."
+        
+        - type: "financial_concerns"
+          keywords: ["zu teuer", "kann mir das nicht leisten", "zu viel"]
+          response_style: "Auf kleinere Summen/günstigere Optionen hinweisen"
+          example: "Verstehe ich. Schauen wir nach einer kleineren Summe – schon ab 5.000 € möglich."
+    
+    age_segmentation:
+      enabled: true
+      segments:
+        - range: [18, 40]
+          label: "jung"
+          recommendation_style: "Gesundheitsprüfung betonen (günstiger + sofort geschützt)"
+          
+        - range: [40, 60]
+          label: "mittleres_alter"
+          recommendation_style: "Optimaler Zeitpunkt betonen, gutes Preis-Leistungs-Verhältnis"
+          
+        - range: [60, 75]
+          label: "senior"
+          recommendation_style: "Ohne Gesundheitsprüfung empfehlen (einfacher Abschluss)"
+          
+        - range: [75, 99]
+          label: "hochbetagt"
+          recommendation_style: "Beruhigen (viele Versicherer bis 85, manche bis 90)"
+

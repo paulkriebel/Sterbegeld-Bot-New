@@ -1,0 +1,85 @@
+# Sterbegeld: Workflow-Routing (Produkt-spezifisch)
+# Intent-Erkennung: Welcher Workflow soll aktiviert werden?
+
+workflow_routing:
+  default_workflow: "tariff_info_comparison"
+  
+  workflows:
+    - id: "tariff_info_comparison"
+      name: "Tarif-Informationen, Vergleich & Auswahl"
+      description: "Kunde möchte Informationen zum Produkt und/oder Tarife vergleichen"
+      priority: 1
+      status: "active"
+      
+      # Trigger-Patterns: Wann wird dieser Workflow aktiviert?
+      triggers:
+        # Allgemeine Einstiegs-Intents
+        general:
+          - "Ich suche eine Sterbegeldversicherung"
+          - "Ich möchte eine Sterbegeldversicherung"
+          - "Ich brauche Sterbegeldversicherung"
+        
+        # Tarif-Vergleich Intents
+        comparison:
+          - "Zeig mir Tarife"
+          - "Tarife vergleichen"
+          - "Angebote zeigen"
+          - "Was kostet das"
+          - "Preise vergleichen"
+        
+        # Informations-Intents
+        information:
+          - "Ich habe Fragen"
+          - "Was ist das"
+          - "Wie funktioniert"
+          - "Brauche ich das"
+          - "Erklär mir"
+          - "Unterschied zu"
+          - "Ist das sinnvoll"
+        
+        keywords:
+          - "suche"
+          - "vergleichen"
+          - "tarife"
+          - "angebote"
+          - "preis"
+          - "kosten"
+          - "frage"
+          - "information"
+          - "erklären"
+        
+        patterns:
+          - "Ich (suche|möchte|brauche) (eine )?(Sterbegeld)?versicherung"
+          - "Zeig mir (Tarife|Angebote|Preise)"
+          - "(Was|Wie viel) kostet (das|eine Sterbegeldversicherung)"
+          - "Ich habe (eine |noch )?Frage(n)?"
+          - "(Was|Wie) (ist|funktioniert) (das|eine Sterbegeldversicherung)"
+          - "Brauche ich (das|eine Sterbegeldversicherung)"
+      
+      # Workflow-Logik: Flexibler Ablauf
+      workflow_logic:
+        flexible_routing: true
+        description: |
+          Dieser Workflow ist flexibel:
+          - User kann DIREKT Tarife finden (→ Parameter abfragen)
+          - User kann ERST Fragen stellen (→ Beratung, dann Parameter abfragen)
+          - User kann WÄHREND der Tarifsuche Fragen stellen
+          
+          Phase 1: Weichenstellung
+          - Frage: "Direkt Tarife finden ODER erst Fragen?"
+          - Falls Fragen: Beantworte 1-3 Fragen, dann zur Tarifsuche überleiten
+          
+          Phase 2-6: Tarif-Vergleich Workflow
+          - Parameter erfassen, Tarife suchen, präsentieren, beraten
+      
+      # Workflow-spezifische Overrides
+      overrides:
+        emojis:
+          max_per_message: 0
+          reason: "Bei Tarif-Präsentation keine Emojis, nur Fakten"
+        
+        output_format:
+          use_bullets: true
+          use_bold_labels: true
+          reason: "Strukturierte Darstellung für bessere Lesbarkeit"
+
