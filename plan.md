@@ -320,7 +320,37 @@
 - 💬 **Natürlich**: User formuliert frei
 - 🚀 **Skalierbar**: Weitere Intents einfach ergänzbar
 
-**Milestone 1**: ✅ Tarifdaten-Modell validiert, Beispiel-Tarife durchsuchbar, Prompts optimiert, Product Info erweitert, Interaction Style professionalisiert, Frontend modernisiert, Layered Architecture implementiert, Flexibler & neutraler Workflow etabliert, Offene Begrüßung mit Intent-Erkennung!
+### ✅ 1.12 Universal Rules Erweiterung (1h) - DONE
+**Ziel**: Erweitere universelle Interaktionsregeln um Mehrsprachigkeit, Grenzen & Eskalation
+
+**Neue Abschnitte hinzugefügt**:
+
+**Abschnitt 2: SPRACHE & MEHRSPRACHIGKEIT**
+- Deutsch/Englisch Support
+- Sofortiger Sprachwechsel bei Kunden-Input
+- Umgang mit gemischten Eingaben
+- Höfliche Ablehnung bei anderen Sprachen
+
+**Abschnitt 5: GRENZEN & ESKALATION**
+- **Prompt-Manipulation erkennen**: Schutz vor Meta-Prompts ("Ignoriere alle vorherigen Anweisungen")
+- **Keine unrealistischen Versprechen**: Bei Druck → Eskalation
+- **Fehlende Informationen**: Ehrlich zugeben, nicht raten, eskalieren
+- **Nur CHECK24 Informationen**: Keine Konkurrenz-Verweise (Verivox, etc.)
+- **Eskalation-Kriterien**: Klare Liste wann zu CHECK24 Kundenservice (089-24 24 11 22) eskaliert wird
+
+**Implementierung**:
+- ✅ `universal_interaction_rules.txt` erweitert (von 162 auf 217 Zeilen)
+- ✅ Abschnittsnummern aktualisiert (jetzt 11 statt 9 Abschnitte)
+- ✅ Alle Tests bestehen (37/37)
+
+**Vorteile**:
+- 🌍 **Mehrsprachig**: DE/EN Support ohne manuelle Konfiguration
+- 🛡️ **Robustheit**: Schutz vor Prompt-Injection
+- 🚦 **Klare Grenzen**: Wann eskalieren, wann ablehnen
+- 🏢 **Brand Protection**: Keine Konkurrenz-Erwähnungen
+- ✅ **Compliance**: Ehrlich bei fehlenden Infos
+
+**Milestone 1**: ✅ Tarifdaten-Modell validiert, Beispiel-Tarife durchsuchbar, Prompts optimiert, Product Info erweitert, Interaction Style professionalisiert, Frontend modernisiert, Layered Architecture implementiert, Flexibler & neutraler Workflow etabliert, Offene Begrüßung mit Intent-Erkennung, Universal Rules erweitert!
 
 ---
 
