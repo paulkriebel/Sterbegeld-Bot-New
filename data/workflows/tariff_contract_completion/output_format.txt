@@ -1,0 +1,142 @@
+# Workflow: Tarif-Abschluss (Contract Completion)
+# Output-Formatierung
+
+## FORMULAR-SPEZIFIKATIONEN:
+
+Alle Formulare werden via `show_form()` Function Call angezeigt.
+Du beschreibst NICHT die Formular-Felder im Text!
+
+### Format: health_check
+
+**Zweck**: Gesundheitserklärung bestätigen
+
+**Felder**:
+```json
+{
+  "type": "health_check",
+  "fields": [
+    {
+      "type": "html_content",
+      "content": "Lange Gesundheitserklärung (siehe Frontend)"
+    },
+    {
+      "id": "confirmed",
+      "label": "Ich bestätige die Gesundheitserklärung",
+      "type": "checkbox",
+      "required": true,
+      "validation": "must_be_checked"
+    }
+  ],
+  "submit_label": "Bestätigen"
+}
+```
+
+### Format: personal_data
+
+**Zweck**: Daten der versicherten Person erfassen
+
+**Felder**:
+- firstname (Text, required)
+- lastname (Text, required)
+- birthdate (Date DD.MM.YYYY, required)
+- phone (Tel, required)
+- zipcode (Text, 5 digits, required)
+- city (Text, required)
+- street (Text, required)
+- housenumber (Text, required)
+- nationality (Select: Deutsch/Österreichisch/Schweizerisch/Andere EU/Nicht-EU, required)
+
+### Format: policyholder
+
+**Zweck**: Versicherungsnehmer-Daten erfassen
+
+**Felder**:
+- same_as_insured (Checkbox, default: true, triggers conditional)
+- Conditional: Wenn same_as_insured = false → gleiche Felder wie personal_data
+
+### Format: beneficiary
+
+**Zweck**: Begünstigten im Todesfall festlegen
+
+**Felder**:
+- type (Radio: "legal_succession" oder "individual", required)
+- Conditional: Wenn type = "individual":
+  - beneficiary_firstname (Text, required)
+  - beneficiary_lastname (Text, required)
+  - beneficiary_birthdate (Date, required)
+  - same_address (Checkbox, default: false)
+  - Conditional: Wenn same_address = false → Adress-Felder
+
+### Format: bank_details
+
+**Zweck**: Bankverbindung für SEPA-Lastschrift
+
+**Felder**:
+- account_holder (Text, required, prefilled)
+- iban (Text, required, pattern: DE[0-9]{20}, auto-format)
+
+### Format: summary
+
+**Zweck**: Zusammenfassung aller Daten zur Prüfung
+
+**Struktur**:
+- Tarif-Details
+- Versicherte Person (mit Edit-Button)
+- Versicherungsnehmer (mit Edit-Button)
+- Begünstigter (mit Edit-Button)
+- Bankverbindung (mit Edit-Button)
+- Rechtliche Hinweise
+- Button: "Verbindlich abschließen"
+
+## VALIDIERUNGS-REGELN:
+
+### Client-Side (Sofort-Feedback):
+- Required Fields: Zeige Fehler bei leerem Feld
+- Format: IBAN, PLZ, Telefon → Regex-Check
+- Datum: Muss in Vergangenheit liegen
+- IBAN: DE + 20 Ziffern
+
+### Server-Side (Bei Submit):
+- Vollständigkeit aller Pflichtfelder
+- IBAN Prüfziffer-Validierung
+- PLZ existiert
+- Geburtsdatum plausibel (nicht in Zukunft, nicht vor 1900)
+
+### Fehler-Handling:
+```
+❌ Fehler: "Bitte füllen Sie alle Pflichtfelder aus."
+❌ Fehler: "Die IBAN ist ungültig. Bitte prüfen Sie Ihre Eingabe."
+❌ Fehler: "Das Geburtsdatum muss in der Vergangenheit liegen."
+```
+
+## RESPONSE-LÄNGE:
+
+### Vor Formular:
+- Max. 1 Satz Erklärung
+- Dann sofort show_form() aufrufen
+
+### Nach Formular:
+- Max. 1 Satz Dankeschön
+- Max. 1 Satz Erklärung nächster Schritt
+- Dann show_form() für nächstes Formular
+
+### Bei Fragen:
+- Max. 2 Absätze Antwort
+- Kein Formular-Aufruf
+
+## FORTSCHRITTS-ANZEIGE:
+
+Zeige Progress-Indicator (wird automatisch vom State Manager berechnet):
+```
+[=========>        ] 40% - Schritt 2 von 5
+```
+
+Oder alternativ:
+```
+Schritt 2 von 5: Versicherte Person
+```
+
+## EMOJIS:
+
+❌ KEINE Emojis im Contract-Workflow
+Grund: Professioneller Kontext, keine emotionale Aufladung

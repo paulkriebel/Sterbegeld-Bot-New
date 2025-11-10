@@ -11,8 +11,13 @@ from app.core.llm_client import LLMClient
 from app.core.prompt_builder import HierarchyComposer
 from app.products.sterbegeld.functions import AVAILABLE_FUNCTIONS
 from app.products.sterbegeld.tariff_engine import search_tariffs
+from app.products.sterbegeld.contract_state_manager import ContractStateManager
 
 logger = logging.getLogger(__name__)
+
+# Global state managers (in production: use Redis/Database)
+# Key: session_id, Value: ContractStateManager
+contract_states = {}
 
 
 class SterbeGeldChatbot:
@@ -86,14 +91,17 @@ class SterbeGeldChatbot:
         
         return '\n'.join(lines)
     
-    def _build_system_prompt(self) -> str:
+    def _build_system_prompt(self, workflow_id: str = "tariff_info_comparison") -> str:
         """
         Build system prompt using the new Hierarchical Architecture.
         
         NEW ARCHITECTURE (3 Layers):
         - Layer 1: Universal rules for all insurance chatbots
         - Layer 2: Product-specific rules (Sterbegeld)
-        - Layer 3: Workflow-specific behavior (Tariff Comparison)
+        - Layer 3: Workflow-specific behavior (dynamically selected)
+        
+        Args:
+            workflow_id: Which workflow to load (tariff_info_comparison or tariff_contract_completion)
         
         Returns:
             Complete system prompt with all layers composed
@@ -111,10 +119,10 @@ class SterbeGeldChatbot:
         
         # Build complete system prompt with all layers
         # Product: "sterbegeld"
-        # Workflow: "tariff_info_comparison" (default for now)
+        # Workflow: dynamically selected based on current state
         system_prompt_body = composer.build_system_prompt(
             product_id="sterbegeld",
-            workflow_id="tariff_info_comparison",
+            workflow_id=workflow_id,
             product_info=product_info
         )
         
@@ -152,18 +160,82 @@ AUSNAHME: Nur Tarifpräsentation (Top 3) darf länger sein.
         
         return identity + system_prompt_body + tariff_section + final_reminder
     
-    def _execute_function(self, function_name: str, arguments: Dict[str, Any]) -> Any:
+    def _execute_function(self, function_name: str, arguments: Dict[str, Any], session_id: str = None) -> Any:
         """
         Execute function call
         
         Args:
             function_name: Name of function to execute
             arguments: Function arguments
+            session_id: Session ID for state management
             
         Returns:
             Function result
         """
-        if function_name == 'tariff_search':
+        if function_name == 'show_form':
+            logger.info(f"Executing show_form: {arguments.get('form_type')}")
+            
+            prefill_data = arguments.get('prefill_data', {})
+            
+            # For personal_data form, add birthdate from state manager if available
+            if arguments.get('form_type') == 'personal_data' and session_id and session_id in contract_states:
+                state = contract_states[session_id]
+                if state.birthdate:
+                    prefill_data['birthdate'] = state.birthdate
+                    prefill_data['birthdate_readonly'] = True
+                    logger.info(f"Prefilling birthdate: {state.birthdate}")
+            
+            return {
+                'action': 'show_form',
+                'form_type': arguments.get('form_type'),
+                'context_message': arguments.get('context_message'),
+                'prefill_data': prefill_data
+            }
+        
+        elif function_name == 'switch_workflow':
+            logger.info(f"Executing switch_workflow to: {arguments.get('target_workflow')}")
+            
+            # Update state manager if exists
+            if session_id and session_id in contract_states:
+                state = contract_states[session_id]
+                state.switch_workflow(arguments.get('target_workflow'), preserve_state=True)
+            
+            return {
+                'action': 'switch_workflow',
+                'target_workflow': arguments.get('target_workflow'),
+                'reason': arguments.get('reason'),
+                'state_preserved': True
+            }
+        
+        elif function_name == 'save_form_data':
+            logger.info(f"Executing save_form_data: {arguments.get('form_type')}")
+            
+            # Save to state manager if exists
+            if session_id and session_id in contract_states:
+                state = contract_states[session_id]
+                state.save_form_data(arguments.get('form_type'), arguments.get('data', {}))
+                
+                # Determine next step
+                next_form = None
+                if arguments.get('next_action') == 'show_next_form':
+                    next_form = state.get_next_form()
+                
+                return {
+                    'action': 'save_form_data',
+                    'form_type': arguments.get('form_type'),
+                    'saved': True,
+                    'next_action': arguments.get('next_action'),
+                    'next_form': next_form,
+                    'progress': state.get_progress()
+                }
+            
+            return {
+                'action': 'save_form_data',
+                'saved': False,
+                'error': 'No active contract session'
+            }
+        
+        elif function_name == 'tariff_search':
             logger.info(f"Executing tariff_search with args: {arguments}")
             
             # Import validation and rounding functions
@@ -228,7 +300,8 @@ AUSNAHME: Nur Tarifpräsentation (Top 3) darf länger sein.
     def chat(
         self,
         user_message: str,
-        conversation_history: Optional[List[Dict[str, str]]] = None
+        conversation_history: Optional[List[Dict[str, str]]] = None,
+        session_id: str = None
     ) -> Dict[str, Any]:
         """
         Process user message and generate response
@@ -236,6 +309,7 @@ AUSNAHME: Nur Tarifpräsentation (Top 3) darf länger sein.
         Args:
             user_message: User's message
             conversation_history: Optional conversation history
+            session_id: Session ID for state management
             
         Returns:
             Response dictionary with 'reply' and 'debug' info
@@ -249,15 +323,30 @@ AUSNAHME: Nur Tarifpräsentation (Top 3) darf länger sein.
             max_messages=20
         )
         
+        # Determine current workflow based on session state
+        from app.api.chat_routes import contract_states
+        current_workflow = "tariff_info_comparison"  # Default
+        if session_id and session_id in contract_states:
+            state = contract_states[session_id]
+            if state.current_workflow == "contract":
+                current_workflow = "tariff_contract_completion"
+        
+        # Build system prompt dynamically based on current workflow
+        system_prompt = self._build_system_prompt(workflow_id=current_workflow)
+        logger.info(f"Using workflow: {current_workflow} for session {session_id}")
+        
         # Build messages for LLM
         messages = [
-            {'role': 'system', 'content': self.system_prompt}
+            {'role': 'system', 'content': system_prompt}
         ]
         messages.extend(conversation_history)
         messages.append({'role': 'user', 'content': user_message})
         
         # Call LLM
         try:
+            # Store function result for debug/frontend
+            function_result_for_debug = None
+            
             response = self.llm_client.chat_completion(
                 messages=messages,
                 functions=AVAILABLE_FUNCTIONS,
@@ -269,8 +358,9 @@ AUSNAHME: Nur Tarifpräsentation (Top 3) darf länger sein.
                 function_name = response['function_call']['name']
                 arguments = response['function_call']['arguments']
                 
-                # Execute function
-                function_result = self._execute_function(function_name, arguments)
+                # Execute function (with session_id for state management)
+                function_result = self._execute_function(function_name, arguments, session_id=session_id)
+                function_result_for_debug = function_result  # Save for response
                 
                 # Add function call and result to messages
                 # GPT-5 uses new "tools" format
@@ -334,7 +424,8 @@ AUSNAHME: Nur Tarifpräsentation (Top 3) darf länger sein.
                     'system_prompt': self.system_prompt,
                     'user_message': user_message,
                     'llm_response': response,
-                    'tokens_used': response['usage']['total_tokens']
+                    'tokens_used': response['usage']['total_tokens'],
+                    'function_result': function_result_for_debug  # Include for frontend buttons
                 }
             }
             

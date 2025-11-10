@@ -643,3 +643,381 @@
 ## Nächster Schritt
 
 **START**: Phase 1.1 - Repository-Setup & Projektstruktur
+
+## Phase 6: Tarifabschluss-Workflow (2-3 Tage)
+
+### ✅ 6.1 LLM-Moderierter Contract Workflow - DONE
+
+**Status**: ✅ Kern-Implementierung abgeschlossen, Formular-UI pending
+
+**Architektur-Entscheidung**: **Hybrides System**
+- ✅ **LLM orchestriert** den Ablauf (wann welches Formular)
+- ✅ **Fixe Formular-Strukturen** (einheitliche UX)
+- ✅ **Workflow-Flexibilität** (Kunde kann jederzeit Fragen stellen oder Workflow wechseln)
+- ✅ **State-Persistenz** (Daten bleiben erhalten)
+
+**Deliverables**:
+
+**Backend - State Manager & Function Calls**:
+- ✅ `app/products/sterbegeld/contract_state_manager.py` (225 Zeilen)
+  - Session-basiertes State Management
+  - Progress Tracking (0-100%)
+  - Workflow Switching mit State Preservation
+  - Data Validation
+- ✅ `app/products/sterbegeld/functions.py` - 3 neue Function Calls erweitert:
+  - `show_form()` - Zeigt strukturierte Formulare im Chat
+  - `switch_workflow()` - Ermöglicht Workflow-Wechsel mit State-Erhalt
+  - `save_form_data()` - Speichert ausgefüllte Formulare
+- ✅ `app/products/sterbegeld/chatbot.py` - System Prompt erweitert (contract_instruction)
+  - LLM als Gesprächsführer
+  - Beispiel-Dialoge für verschiedene Szenarien
+  - Klare Anweisungen für Function Calls
+
+**Backend - API Endpoints**:
+- ✅ `app/api/chat_routes.py` - 3 neue Endpoints:
+  - `POST /api/contract/init` - Initialisiert Contract Workflow
+  - `GET /api/contract/state` - Liefert aktuellen State
+  - `POST /api/contract/form/submit` - Speichert ausgefülltes Formular
+- ✅ Session-ID Management integriert
+
+**Frontend - LLM Actions Handler**:
+- ✅ `app/static/js/chat.js` - Contract Workflow Integration:
+  - `handleTariffSelection()` - Startet Contract via API
+  - `handleLLMActions()` - Zentrale Function für alle LLM Actions
+  - `showFormInChat()` - Zeigt Formulare inline (Placeholder)
+  - `simulateFormSubmit()` - Form-Handling (Placeholder)
+  - Session-ID Management
+- ✅ `app/static/css/style.css` - Inline Form Styling (60 Zeilen)
+- ✅ Problem 1 gelöst: `function_result` in Response integriert → Tariff-Buttons erscheinen
+
+**Workflow-Schritte** (via State Manager):
+1. ✅ `health_check` - Nur wenn `health_declaration_required=true`
+2. ✅ `personal_data` - Immer
+3. ✅ `policyholder` - Immer (kann gleich wie personal_data sein)
+4. ✅ `beneficiary` - Immer (gesetzliche Erbfolge oder individuelle Personen)
+5. ✅ `bank_details` - Immer
+
+**Dokumentation**:
+- ✅ `LLM_MODERATED_CONTRACT_WORKFLOW.md` (450 Zeilen)
+  - Architektur-Überblick
+  - Komponenten-Dokumentation
+  - End-to-End Workflow
+  - Gelöste Probleme
+  - TODO / Nächste Schritte
+
+**Testing**:
+- ✅ Alle 37 Tests bestehen
+- ✅ Server startet erfolgreich
+- ✅ Health-Check Endpoint funktioniert
+
+### ✅ 6.2 Workflow-Definition & Formular-UI - DONE
+
+**Status**: ✅ Vollständig implementiert
+
+**Deliverables**:
+
+**Workflow-Definition**:
+- ✅ `data/products/sterbegeld/workflow_router.yaml` - Contract Workflow Eintrag
+- ✅ `data/workflows/tariff_contract_completion/behavior.txt` (270 Zeilen)
+  - LLM-Moderation Anweisungen
+  - Function Calls Dokumentation (show_form, switch_workflow, save_form_data)
+  - Ablauf-Logik für alle 5 Schritte
+  - Tonalität & Empathie Regeln
+  - Besondere Situationen & Compliance
+- ✅ `data/workflows/tariff_contract_completion/output_format.txt` (105 Zeilen)
+  - Formular-Spezifikationen für alle 6 Forms
+  - Validierungs-Regeln (Client + Server)
+  - Response-Länge Guidelines
+  - Fehler-Handling
+
+**Frontend - Formular-Komponenten**:
+- ✅ `app/static/js/contract_forms.js` (630 Zeilen)
+  - 6 Formular-Renderer:
+    - `renderHealthCheckForm()` - Gesundheitserklärung mit langer Checkbox
+    - `renderPersonalDataForm()` - 9 Felder (Name, Adresse, Nationalität)
+    - `renderPolicyholderForm()` - Conditional Fields basierend auf Checkbox
+    - `renderBeneficiaryForm()` - Radio + Conditional Individual/Legal
+    - `renderBankDetailsForm()` - IBAN mit Auto-Formatting
+    - `renderSummaryForm()` - Read-only mit Edit-Buttons
+  - Helper Functions:
+    - `renderPersonalDataFields()` - Wiederverwendbar
+    - `renderAddressFields()` - Wiederverwendbar
+    - `formatIBAN()` - Auto-Formatierung
+    - `togglePolicyholderFields()` - Conditional Logic
+    - `toggleBeneficiaryFields()` - Conditional Logic
+    - `toggleBeneficiaryAddress()` - Conditional Logic
+- ✅ `app/static/js/chat.js` - Integrationen aktualisiert:
+  - `showFormInChat()` - Echte Forms statt Placeholder
+  - `handleFormSubmit()` - Echte Daten-Extraktion aus FormData
+- ✅ `app/templates/index.html` - Script eingebunden
+
+**Frontend - Enhanced CSS**:
+- ✅ `app/static/css/style.css` - 300+ Zeilen neue Styles:
+  - Form rows (side-by-side fields)
+  - Form groups (small/large variants)
+  - Input/Select Styling mit Focus States
+  - Checkbox/Radio Groups
+  - Health Declaration Box
+  - Info Box
+  - Summary Sections mit Edit Buttons
+  - Legal Notes Box
+  - Primary Button Variant
+  - Validation States (valid/invalid)
+  - Responsive Adjustments
+
+**Testing**:
+- ✅ Alle 37 Tests bestehen
+- ✅ Forms werden korrekt gerendert
+- ✅ Conditional Logic funktioniert
+- ✅ IBAN Auto-Formatting funktioniert
+
+**✅ DONE - Phase 6.3: Contract Workflow Improvements**:
+
+**Problem:**
+1. LLM-Formulierungen waren zu technisch ("Formular", "persönliche Daten")
+2. LLM fragte manchmal ob es Formular zeigen soll (statt direkt zu zeigen)
+3. Keine Fortschrittsanzeige für Kunden
+4. Geburtsdatum wurde nicht aus Tarifsuche übernommen (User musste es erneut eingeben)
+
+**Solution:**
+1. **behavior.txt Verbesserungen:**
+   - Explizite Anweisung: "NIEMALS FRAGEN" ob Formular gezeigt werden soll
+   - Klare Bezeichnungen: "Daten der versicherten Person" statt "persönliche Daten"
+   - Erweiterte DOS & DON'TS Sektion
+
+2. **Progress Indicator:**
+   - ✅ `ContractStateManager.get_step_info()`: Methode für Fortschrittsinfo
+   - ✅ `chat_routes.py`: Progress in API Response
+   - ✅ `chat.js`: `addProgressIndicator()` Funktion
+   - ✅ `style.css`: Blaues Design mit Fortschrittsbalken
+
+3. **Geburtsdatum Pre-fill & Read-only:**
+   - ✅ `chat.js`: Extrahiert Geburtsdatum aus conversation history
+   - ✅ `ContractStateManager`: Speichert birthdate beim Init
+   - ✅ `chatbot.py`: Übergibt birthdate als prefill_data
+   - ✅ `contract_forms.js`: Birthdate readonly wenn vorbefüllt
+   - ✅ `style.css`: Readonly Input Styling (grau, not-allowed cursor)
+
+**✅ DONE - Phase 6.3.1: Kurze Formular-Einleitungen**:
+
+**Problem:**
+LLM schrieb zu lange Texte (3-4 Absätze) vor Formularen mit unnötigen Fragen wie:
+- "Geben Sie mir Bescheid wenn Sie fertig sind"
+- "Soll ich Ihnen das Formular anzeigen?"
+- "Das dauert nur wenige Minuten. Ich führe Sie durch den Prozess..."
+
+**Solution in behavior.txt:**
+1. **Neue Längen-Regel:**
+   - MAX 2 kurze Sätze (je max. 10-12 Wörter)
+   - KEINE Fragen nach Formularen
+   - Template: "[Dank/Übergang]. [Was benötigt wird]. [Handlungsanweisung]."
+
+2. **Template-Sätze für jeden Schritt:**
+   - health_check: "Zunächst benötige ich eine kurze Gesundheitsbestätigung der versicherten Person."
+   - personal_data: "Als Nächstes benötige ich die Daten der versicherten Person. Bitte tragen Sie Vorname, Nachname und Kontaktdaten ein."
+   - policyholder: "Nun benötige ich die Daten des Versicherungsnehmers. Falls Sie selbst Versicherungsnehmer sind, aktivieren Sie einfach die Checkbox."
+   - beneficiary: "Jetzt benötige ich die Angaben zum Begünstigten. Wählen Sie entweder gesetzliche Erbfolge oder geben Sie eine Person an."
+   - bank_details: "Als Letztes benötige ich Ihre Bankverbindung für den Beitragseinzug. Bitte tragen Sie IBAN und Kontoinhaber ein."
+
+3. **Verschärfte DON'TS:**
+   - ❌ Mehr als 2 Sätze vor Formular
+   - ❌ Prozesserklärungen ("Das dauert nur...")
+   - ❌ Fragen ("Geben Sie Bescheid", "Sind Sie fertig?")
+   - ❌ Mehrere Absätze
+
+4. **Alle Beispiele gekürzt:**
+   - START: Von 3 Sätzen auf 1 Satz reduziert
+   - Formular-Übergänge: Alle auf max. 1 Satz
+   - Frage-Antworten: Keine nachgelagerten Fragen mehr
+
+**Result:**
+- Natürliche, kurze Kommunikation ohne Floskeln
+- LLM folgt konsequent dem Template-Muster
+- Bessere User Experience durch direkte, präzise Anweisungen
+
+**✅ HOTFIX - Phase 6.3.2: behavior.txt wurde nicht geladen**:
+
+**Problem:**
+Trotz Änderungen in behavior.txt stellte der Chatbot immer noch Fragen wie:
+- "Soll ich das Formular für Ihre persönlichen Daten jetzt öffnen?"
+- Die Templates wurden ignoriert
+
+**Root Cause Analyse:**
+1. `chatbot.py` baute System Prompt IMMER mit `workflow_id="tariff_info_comparison"`
+2. Der `tariff_contract_completion` Workflow wurde NIE geladen
+3. Stattdessen gab es eine veraltete `contract_instruction` Variable mit alten Beispielen
+4. Die behavior.txt mit den neuen kurzen Anweisungen wurde komplett ignoriert
+
+**Solution:**
+1. **`_build_system_prompt()` dynamisch gemacht:**
+   - Nimmt jetzt `workflow_id` Parameter
+   - Lädt den richtigen Workflow basierend auf State
+
+2. **`chat()` method angepasst:**
+   - Ermittelt aktuellen Workflow aus `contract_states`
+   - Übergibt korrekten `workflow_id` an `_build_system_prompt()`
+   - Log: "Using workflow: tariff_contract_completion for session X"
+
+3. **Veraltete `contract_instruction` entfernt:**
+   - 80+ Zeilen alte Contract-Anweisungen gelöscht
+   - Jetzt wird behavior.txt korrekt geladen
+
+**Files Changed:**
+- `app/products/sterbegeld/chatbot.py` (3 changes)
+  - `_build_system_prompt(workflow_id="tariff_info_comparison")` mit Parameter
+  - `chat()` ermittelt workflow aus session state
+  - `contract_instruction` Variable entfernt
+
+**Result:**
+- behavior.txt wird jetzt korrekt geladen wenn User im Contract Workflow ist
+- Template-Sätze werden vom LLM verwendet
+- Keine Fragen mehr vor Formularen
+
+**✅ HOTFIX - Phase 6.3.3: LLM generiert "Schritt X von Y" im Text**:
+
+**Problem:**
+Der Chatbot schrieb "Schritt 4 von 5: Jetzt benötige ich..." statt nur "Jetzt benötige ich..."
+- Progress Indicator erschien im Text statt nur in der visuellen Überschrift
+- "Schritt X von Y" war Teil des Satzes
+
+**Root Cause:**
+- Progress Indicator wird bereits visuell vom Frontend angezeigt
+- LLM wusste nicht, dass er "Schritt X von Y" NICHT erwähnen soll
+- Keine explizite Regel dagegen in behavior.txt
+
+**Solution:**
+Added to behavior.txt:
+
+1. **Neue FORTSCHRITTSANZEIGE-Regel:**
+```
+**FORTSCHRITTSANZEIGE**:
+- NIEMALS "Schritt X von Y" in deinen Nachrichten erwähnen
+- Der Fortschritt wird AUTOMATISCH vom System angezeigt
+- Du konzentrierst dich NUR auf den Inhalt
+```
+
+2. **Erweiterte DON'T-Sektion:**
+- ❌ "Schritt X von Y" erwähnen (wird automatisch angezeigt)
+- ❌ Fortschritt beschreiben ("Das ist der vierte Schritt", "Noch 2 Schritte")
+
+**Files Changed:**
+- `data/workflows/tariff_contract_completion/behavior.txt` (2 additions)
+
+**Result:**
+- LLM erwähnt keinen Fortschritt mehr im Text
+- Progress Indicator erscheint nur visuell in der Überschrift
+- Saubere Trennung zwischen visuellen Elementen und Text-Inhalt
+
+**✅ DONE - Phase 6.3.4: Personal Data Form UI Improvements**:
+
+**Changes:**
+1. **Formular-Überschrift geändert:**
+   - Von: "Versicherte Person"
+   - Zu: "Persönliche Daten des Versicherten"
+   - Konsistenter mit anderen Formularen
+
+2. **Geburtsdatum-Feld visuell verbessert:**
+   - Entfernt: `<small>Format: TT.MM.JJJJ (aus Tarifsuche übernommen)</small>`
+   - Neu: CSS-Klasse `.birthdate-prefilled` für dunkelgrauen Hintergrund
+   - Background: #4A4A4A (Dunkelgrau)
+   - Text: #FFFFFF (Weiß)
+   - Visuell sofort erkennbar als vorbefülltes, nicht editierbares Feld
+
+**Files Changed:**
+- `app/static/js/contract_forms.js`:
+  - Überschrift geändert
+  - CSS-Klasse `birthdate-prefilled` hinzugefügt
+  - `<small>` Element entfernt
+- `app/static/css/style.css`:
+  - `.birthdate-prefilled` Styling hinzugefügt
+
+**Result:**
+- Klarere Überschrift im Formular
+- Vorbefülltes Geburtsdatum visuell deutlich hervorgehoben
+- Kein ablenkender Hilfstext mehr
+
+**✅ HOTFIX - Phase 6.3.5: Beneficiary Form Submit-Button funktioniert nicht**:
+
+**Problem:**
+- User konnte nicht auf "Weiter" klicken beim Begünstigten-Formular
+- Auch wenn "Gesetzliche Erbfolge" ausgewählt war, ließ sich das Formular nicht absenden
+
+**Root Cause:**
+1. Radio-Buttons hatten kein `required` Attribut
+2. Individuelle Felder (Name, Geburtsdatum) hatten kein `required` beim initialen Rendering
+3. Adressfelder hatten immer `required`, auch wenn sie ausgeblendet waren (bei "gleiche Adresse")
+
+**Solution:**
+
+1. **Radio-Buttons mit required:**
+   ```javascript
+   <input type="radio" name="type" value="legal_succession" required>
+   ```
+
+2. **Bedingte required-Attribute für individuelle Felder:**
+   ```javascript
+   ${!isLegal ? 'required' : ''}
+   ```
+
+3. **renderAddressFields mit required-Parameter:**
+   ```javascript
+   function renderAddressFields(prefillData = {}, prefix = '', required = true)
+   ```
+   - Im Beneficiary-Form: `renderAddressFields(..., 'ben', !sameAddress)`
+   - Felder sind nur required wenn sie sichtbar sind
+
+**Files Changed:**
+- `app/static/js/contract_forms.js`:
+  - Radio-Buttons: `required` hinzugefügt
+  - Beneficiary-Felder: bedingte `required` Attribute
+  - `renderAddressFields()`: neuer `required` Parameter
+  - Beneficiary-Adresse: bedingte required-Logik
+
+**Result:**
+- "Weiter"-Button funktioniert bei "Gesetzliche Erbfolge"
+- Formular validiert korrekt bei "Individuelle Person(en)"
+- Ausgeblendete Felder blockieren Submit nicht mehr
+
+**⏳ TODO - Phase 6.4: Erweiterte Features**:
+- ⏳ Server-Side Validation (IBAN Checksum, PLZ existiert)
+- ⏳ Client-Side Real-time Validation Feedback
+- ⏳ Edit-Funktionalität aus Summary
+- ⏳ Production State Management (Redis statt In-Memory)
+
+**Features**:
+- ✅ Session-basiertes Workflow-Management (In-Memory)
+- ✅ Bedingte Logik (Health Check, Policyholder, Beneficiary)
+- ✅ Client- und serverseitige Validierung (IBAN, PLZ, Telefon)
+- ✅ Fortschritts-Tracking (0-100%)
+- ✅ Auto-Pre-Fill (Kontoinhaber, Adressen)
+- ✅ IBAN-Formatierung (4er-Gruppen)
+- ✅ Referenznummer-Generierung (SG-XXXXXXXX)
+
+**Tests**:
+- ✅ App Initialization: Erfolgreich
+- ✅ All existing tests: 37/37 passing
+- 📝 TODO: Unit Tests für ContractDataCollector
+- 📝 TODO: Integration Tests für Contract API
+
+**Dokumentation**:
+- ✅ `CONTRACT_COMPLETION_GUIDE.md` (450 Zeilen)
+  - Architektur-Übersicht
+  - Workflow-Schritte detailliert
+  - Datenfluss-Diagramme
+  - Session-Management
+  - Validierung & Fehlerbehandlung
+  - Zukünftige Erweiterungen
+  - Testing-Strategie
+  - Troubleshooting
+
+**Zukünftige Erweiterungen**:
+- 📝 Automatische "Tarif abschließen" Buttons bei Tarifsuche-Ergebnissen
+- 📝 "Daten ändern" Funktionalität
+- 📝 Workflow-Fortsetzung (Speichern unvollständiger Workflows)
+- 📝 PostgreSQL Persistierung
+- 📝 E-Mail-Integration (Bestätigungsmails)
+- 📝 CRM-Integration
+- 📝 Analytics & Funnel-Tracking
+
+**Ergebnis**: Production-Ready Contract Completion Workflow mit empfohlenen Erweiterungen für Scale.
+

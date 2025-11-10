@@ -46,7 +46,81 @@ TARIFF_SEARCH_FUNCTION = {
 }
 
 
+# show_form function definition
+SHOW_FORM_FUNCTION = {
+    "name": "show_form",
+    "description": "Zeige ein Formular zur strukturierten Dateneingabe im Chat. Verwende dies wenn du Kundendaten sammeln möchtest.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "form_type": {
+                "type": "string",
+                "enum": ["health_check", "personal_data", "policyholder", "beneficiary", "bank_details", "summary"],
+                "description": "Typ des anzuzeigenden Formulars"
+            },
+            "context_message": {
+                "type": "string",
+                "description": "Deine persönliche Nachricht an den Kunden, die VOR dem Formular angezeigt wird. Erkläre kurz was jetzt passiert."
+            },
+            "prefill_data": {
+                "type": "object",
+                "description": "Optional: Daten zum Vorbefüllen des Formulars (z.B. aus vorherigen Angaben)"
+            }
+        },
+        "required": ["form_type", "context_message"]
+    }
+}
+
+# switch_workflow function definition
+SWITCH_WORKFLOW_FUNCTION = {
+    "name": "switch_workflow",
+    "description": "Wechsle zu einem anderen Workflow wenn der Kunde das möchte (z.B. zurück zu Infos/Vergleich). Contract-Daten bleiben immer erhalten!",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "target_workflow": {
+                "type": "string",
+                "enum": ["info", "contract", "comparison"],
+                "description": "Ziel-Workflow: 'info' für Produktinfos/Fragen, 'comparison' für Tarifvergleich, 'contract' für Vertragsabschluss"
+            },
+            "reason": {
+                "type": "string",
+                "description": "Grund für den Wechsel - wird dem Kunden angezeigt"
+            }
+        },
+        "required": ["target_workflow", "reason"]
+    }
+}
+
+# save_form_data function definition
+SAVE_FORM_DATA_FUNCTION = {
+    "name": "save_form_data",
+    "description": "Speichere ausgefüllte Formulardaten und bestimme nächsten Schritt. Wird automatisch aufgerufen wenn User Formular absendet.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "form_type": {
+                "type": "string",
+                "description": "Typ des ausgefüllten Formulars"
+            },
+            "data": {
+                "type": "object",
+                "description": "Die ausgefüllten Formulardaten"
+            },
+            "next_action": {
+                "type": "string",
+                "enum": ["show_next_form", "show_summary", "ask_question"],
+                "description": "Was soll als Nächstes passieren?"
+            }
+        },
+        "required": ["form_type", "data", "next_action"]
+    }
+}
+
 # List of all available functions
 AVAILABLE_FUNCTIONS = [
-    TARIFF_SEARCH_FUNCTION
+    TARIFF_SEARCH_FUNCTION,
+    SHOW_FORM_FUNCTION,
+    SWITCH_WORKFLOW_FUNCTION,
+    SAVE_FORM_DATA_FUNCTION
 ]

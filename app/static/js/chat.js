@@ -5,6 +5,9 @@
 
 // Global state
 let conversationHistory = [];
+let currentSessionId = null;
+let currentWorkflowMode = 'info';  // info, contract, comparison
+let contractData = {};
 
 // DOM Elements
 const chatForm = document.getElementById('chat-form');
@@ -70,8 +73,8 @@ async function handleSubmit(e) {
         // Hide typing indicator
         hideTypingIndicator();
         
-        // Add bot response
-        addMessageToChat('bot', response.reply);
+        // Handle LLM actions (tariffs, forms, workflow switches)
+        handleLLMActions(response);
         
         // Update debug panel
         updateDebugPanel(response.debug);
@@ -99,7 +102,8 @@ async function sendMessage(message) {
         },
         body: JSON.stringify({
             message: message,
-            conversation_history: conversationHistory
+            conversation_history: conversationHistory,
+            session_id: currentSessionId
         })
     });
     
@@ -122,9 +126,9 @@ async function sendMessage(message) {
 }
 
 /**
- * Add message to chat UI with HTML formatting support
+ * Add message to chat UI with HTML formatting support and optional tariff buttons
  */
-function addMessageToChat(role, text) {
+function addMessageToChat(role, text, tariffs = null) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message message-${role}`;
     
@@ -135,6 +139,22 @@ function addMessageToChat(role, text) {
     const formattedText = formatMessageText(text);
     contentDiv.innerHTML = formattedText;
     
+    // Add tariff buttons if this is a bot message with tariffs
+    if (role === 'bot' && tariffs && tariffs.length > 0) {
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'tariff-buttons-container';
+        
+        tariffs.forEach(tariff => {
+            const button = document.createElement('button');
+            button.className = 'tariff-select-btn';
+            button.textContent = `${tariff.name} abschließen`;
+            button.onclick = () => handleTariffSelection(tariff);
+            buttonsContainer.appendChild(button);
+        });
+        
+        contentDiv.appendChild(buttonsContainer);
+    }
+    
     const timeSpan = document.createElement('span');
     timeSpan.className = 'message-time';
     timeSpan.textContent = getCurrentTime();
@@ -144,6 +164,8 @@ function addMessageToChat(role, text) {
     
     chatContainer.appendChild(messageDiv);
     scrollToBottom();
+    
+    return messageDiv;  // Return for progress indicator
 }
 
 /**
@@ -266,6 +288,221 @@ function updateDebugPanel(debug) {
     if (debug.tokens_used) {
         document.getElementById('debug-tokens').textContent = 
             `${debug.tokens_used} tokens`;
+    }
+}
+
+/**
+ * Handle tariff selection and start contract workflow
+ */
+async function handleTariffSelection(tariffData) {
+    // Add user selection message
+    addMessageToChat('user', `Ich möchte den Tarif "${tariffData.name}" abschließen`);
+    
+    // Show typing indicator
+    showTypingIndicator();
+    
+    try {
+        // Extract birthdate from conversation history (DD.MM.YYYY format)
+        let birthdate = null;
+        const birthdatePattern = /\b(\d{2})\.(\d{2})\.(\d{4})\b/;
+        for (let i = conversationHistory.length - 1; i >= 0; i--) {
+            const msg = conversationHistory[i];
+            if (msg.role === 'user') {
+                const match = msg.content.match(birthdatePattern);
+                if (match) {
+                    birthdate = match[0];
+                    break;
+                }
+            }
+        }
+        
+        console.log('Extracted birthdate for contract:', birthdate);
+        
+        // Initialize contract
+        const initResponse = await fetch('/api/contract/init', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tariff: tariffData,
+                session_id: currentSessionId,
+                birthdate: birthdate
+            })
+        });
+        
+        if (!initResponse.ok) {
+            throw new Error(`HTTP error! status: ${initResponse.status}`);
+        }
+        
+        const initData = await initResponse.json();
+        currentSessionId = initData.session_id;
+        currentWorkflowMode = 'contract';
+        
+        // Send initial message to LLM to start contract process
+        const message = `Ich möchte den Tarif "${tariffData.name}" abschließen. Bitte führe mich durch den Prozess.`;
+        const response = await sendMessage(message);
+        
+        hideTypingIndicator();
+        
+        // Handle LLM response (might contain show_form action)
+        handleLLMActions(response);
+        
+    } catch (error) {
+        hideTypingIndicator();
+        console.error('Contract start error:', error);
+        addMessageToChat('bot', 'Entschuldigung, es gab einen Fehler beim Starten des Abschlusses.');
+    }
+}
+
+/**
+ * Add progress indicator to bot message if contract workflow active
+ */
+function addProgressIndicator(messageDiv, progressInfo) {
+    if (!progressInfo) return;
+    
+    const { current_step, total_steps, step_name } = progressInfo;
+    
+    // Create progress indicator
+    const progressDiv = document.createElement('div');
+    progressDiv.className = 'contract-progress-indicator';
+    progressDiv.innerHTML = `
+        <div class="progress-text">
+            <span class="step-label">Schritt ${current_step} von ${total_steps}</span>
+            <span class="step-name">${step_name}</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: ${(current_step / total_steps) * 100}%"></div>
+        </div>
+    `;
+    
+    // Insert at the top of bot message content
+    const messageContent = messageDiv.querySelector('.message-content');
+    if (messageContent) {
+        messageContent.insertBefore(progressDiv, messageContent.firstChild);
+    }
+}
+
+/**
+ * Handle LLM actions (show_form, switch_workflow, tariffs, etc.)
+ */
+function handleLLMActions(response) {
+    // Always show bot reply first (if exists)
+    // Include tariffs for buttons if present
+    if (response.reply) {
+        const botMessage = addMessageToChat('bot', response.reply, response.tariffs);
+        
+        // Add progress indicator if contract workflow active
+        if (response.contract_progress) {
+            addProgressIndicator(botMessage, response.contract_progress);
+        }
+    }
+    
+    // Check for function result actions
+    const debug = response.debug || {};
+    const functionResult = debug.function_result;
+    
+    if (functionResult && functionResult.action) {
+        switch(functionResult.action) {
+            case 'show_form':
+                showFormInChat(functionResult.form_type, functionResult.context_message, functionResult.prefill_data);
+                break;
+                
+            case 'switch_workflow':
+                currentWorkflowMode = functionResult.target_workflow;
+                console.log(`Switched to ${functionResult.target_workflow} workflow. State preserved: ${functionResult.state_preserved}`);
+                break;
+                
+            case 'save_form_data':
+                console.log(`Form data saved: ${functionResult.form_type}. Progress: ${functionResult.progress}%`);
+                // If there's a next form, LLM will call show_form in follow-up
+                break;
+        }
+    }
+}
+
+/**
+ * Show form in chat (inline) - REAL IMPLEMENTATION
+ */
+function showFormInChat(formType, contextMessage, prefillData = {}) {
+    console.log(`Showing form: ${formType}`, prefillData);
+    
+    // Render actual form using contract_forms.js
+    const formHtml = renderForm(formType, prefillData, contextMessage);
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message message-bot';
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.innerHTML = formHtml;
+    
+    // Add form submit handler
+    const form = contentDiv.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await handleFormSubmit(form);
+        });
+    }
+    
+    messageDiv.appendChild(contentDiv);
+    chatContainer.appendChild(messageDiv);
+    scrollToBottom();
+}
+
+/**
+ * Handle form submission - REAL IMPLEMENTATION
+ */
+async function handleFormSubmit(form) {
+    const formType = form.dataset.formType;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    console.log(`Form submitted: ${formType}`, data);
+    
+    // Disable form to prevent double submission
+    const formElements = form.querySelectorAll('input, select, button');
+    formElements.forEach(el => el.disabled = true);
+    
+    showTypingIndicator();
+    
+    try {
+        // Save form data via API
+        const saveResponse = await fetch('/api/contract/form/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                session_id: currentSessionId,
+                form_type: formType,
+                data: data
+            })
+        });
+        
+        if (!saveResponse.ok) {
+            throw new Error(`HTTP error! status: ${saveResponse.status}`);
+        }
+        
+        const saveData = await saveResponse.json();
+        console.log('Form saved:', saveData);
+        
+        // Tell LLM that form was submitted
+        const message = `Formular ${formType} wurde ausgefüllt. Was ist der nächste Schritt?`;
+        const response = await sendMessage(message);
+        
+        hideTypingIndicator();
+        
+        // Handle LLM response (likely shows next form)
+        handleLLMActions(response);
+        
+    } catch (error) {
+        hideTypingIndicator();
+        console.error('Form submit error:', error);
+        addMessageToChat('bot', 'Es gab einen Fehler beim Speichern der Daten. Bitte versuchen Sie es erneut.');
+        
+        // Re-enable form on error
+        formElements.forEach(el => el.disabled = false);
     }
 }
 

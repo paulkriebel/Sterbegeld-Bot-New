@@ -82,4 +82,63 @@ workflow_routing:
           use_bullets: true
           use_bold_labels: true
           reason: "Strukturierte Darstellung für bessere Lesbarkeit"
+    
+    - id: "tariff_contract_completion"
+      name: "Tarif-Abschluss"
+      description: "Kunde möchte ausgewählten Tarif verbindlich abschließen"
+      priority: 2
+      status: "active"
+      
+      # Trigger-Patterns: Wann wird dieser Workflow aktiviert?
+      triggers:
+        # Wird hauptsächlich durch Button-Click aktiviert
+        activation_method: "button_click"
+        
+        # Aber auch bei expliziten User-Anfragen:
+        general:
+          - "Ich möchte den Tarif abschließen"
+          - "Ich möchte diesen Tarif kaufen"
+          - "Tarif beantragen"
+          - "Antrag stellen"
+        
+        keywords:
+          - "abschließen"
+          - "abschluss"
+          - "kaufen"
+          - "beantragen"
+          - "antrag"
+          - "buchen"
+          - "bestellen"
+      
+      # Workflow-Logik: LLM-moderiert mit strukturierten Formularen
+      workflow_logic:
+        type: "llm_moderated_forms"
+        sequential_steps: true
+        flexible_routing: true
+        description: |
+          Hybrid-Ansatz:
+          - LLM moderiert den Prozess und reagiert auf Fragen
+          - Formulare sammeln Daten strukturiert
+          - User kann jederzeit Workflow wechseln (State bleibt erhalten)
+          
+          Schritte:
+          1. Gesundheitsprüfung (nur wenn tariff.health_declaration_required)
+          2. Versicherte Person
+          3. Versicherungsnehmer
+          4. Begünstigter
+          5. Bankverbindung
+          6. Zusammenfassung & Bestätigung
+      
+      # Workflow-spezifische Overrides
+      overrides:
+        emojis:
+          max_per_message: 0
+          reason: "Professionelle Datensammlung ohne Emojis"
+        
+        response_length:
+          max_paragraphs: 1
+          reason: "Kurze Erklärungen, Fokus auf Formulare"
+        
+        form_based: true
+        inline_forms: true
 

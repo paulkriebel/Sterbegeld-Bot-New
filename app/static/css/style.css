@@ -292,3 +292,440 @@ body {
     background: #555;
     border-radius: 4px;
 }
+
+/* ===== TARIFF SELECTION BUTTONS ===== */
+.tariff-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.tariff-select-btn {
+    padding: 12px 20px;
+    background: #022D94;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 90px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.tariff-select-btn:hover {
+    background: #001F6B;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(2, 45, 148, 0.3);
+}
+
+.tariff-select-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 4px rgba(2, 45, 148, 0.3);
+}
+
+/* ============================================================
+   CONTRACT WORKFLOW - INLINE FORMS
+   ============================================================ */
+
+.inline-form {
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.inline-form h4 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #022D94;
+}
+
+.inline-form p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #666666;
+}
+
+.inline-form em {
+    color: #999999;
+}
+
+.form-submit-btn {
+    margin-top: 12px;
+    padding: 10px 20px;
+    background: #006CFF;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 90px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.form-submit-btn:hover {
+    background: #0059DB;
+    transform: translateY(-1px);
+}
+
+.form-submit-btn:active {
+    transform: translateY(0);
+}
+
+/* ============================================================
+   ENHANCED FORM STYLING - Contract Workflow
+   ============================================================ */
+
+/* Form rows for side-by-side fields */
+.form-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group-small {
+    flex: 0 0 30% !important;
+}
+
+.form-group-large {
+    flex: 0 0 calc(70% - 12px) !important;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #CCCCCC;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #006CFF;
+    box-shadow: 0 0 0 3px rgba(0, 108, 255, 0.1);
+}
+
+.form-group input[readonly] {
+    background-color: #F5F5F5;
+    color: #666666;
+    cursor: not-allowed;
+    border-color: #E0E0E0;
+}
+
+.form-group input[readonly]:focus {
+    border-color: #E0E0E0;
+    box-shadow: none;
+}
+
+/* Darker gray for prefilled birthdate */
+.form-group input.birthdate-prefilled {
+    background-color: #4A4A4A;
+    color: #FFFFFF;
+    cursor: not-allowed;
+    border-color: #4A4A4A;
+}
+
+.form-group input.birthdate-prefilled:focus {
+    border-color: #4A4A4A;
+    box-shadow: none;
+}
+
+.form-group input:disabled,
+.form-group select:disabled {
+    background: #F5F5F5;
+    color: #999999;
+    cursor: not-allowed;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #666666;
+}
+
+/* Checkbox and Radio groups */
+.checkbox-group,
+.radio-group {
+    margin: 16px 0;
+}
+
+.radio-group > label:first-child {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+}
+
+.checkbox-label,
+.radio-label {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+.checkbox-label:hover,
+.radio-label:hover {
+    background: #F5F5F5;
+    border-color: #CCCCCC;
+}
+
+.checkbox-label input[type="checkbox"],
+.checkbox-label input[type="radio"],
+.radio-label input[type="radio"] {
+    width: auto;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.checkbox-label span,
+.radio-label span {
+    flex: 1;
+    font-size: 14px;
+    color: #333333;
+}
+
+/* Health declaration box */
+.health-declaration {
+    background: #F9F9F9;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333333;
+}
+
+.health-declaration p {
+    margin: 8px 0;
+}
+
+.health-declaration strong {
+    color: #022D94;
+}
+
+.health-declaration ul {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.health-declaration li {
+    margin: 4px 0;
+}
+
+/* Info box */
+.info-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #E6F2FF;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: #022D94;
+}
+
+.info-box svg {
+    flex-shrink: 0;
+}
+
+/* Summary form sections */
+.summary-section {
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: #FFFFFF;
+}
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.summary-header h5 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #022D94;
+}
+
+.edit-btn {
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid #006CFF;
+    color: #006CFF;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.edit-btn:hover {
+    background: #006CFF;
+    color: #FFFFFF;
+}
+
+.edit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.summary-content {
+    font-size: 14px;
+    color: #333333;
+}
+
+.summary-content p {
+    margin: 4px 0;
+    line-height: 1.5;
+}
+
+.summary-content strong {
+    color: #022D94;
+}
+
+/* Legal notes */
+.legal-notes {
+    background: #FFF9E6;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    border-left: 4px solid #FFD700;
+}
+
+.legal-notes ul {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #666666;
+}
+
+.legal-notes li {
+    margin: 8px 0;
+}
+
+/* Submit button primary variant */
+.form-submit-btn.primary {
+    background: #00A040;
+    font-size: 16px;
+    padding: 14px 24px;
+}
+
+.form-submit-btn.primary:hover {
+    background: #008533;
+}
+
+.form-submit-btn.primary:disabled {
+    background: #CCCCCC;
+    cursor: not-allowed;
+}
+
+/* Form validation states */
+.form-group input:invalid:not(:focus) {
+    border-color: #E53935;
+}
+
+.form-group input:valid:not(:focus) {
+    border-color: #00A040;
+}
+
+/* Responsive adjustments for forms */
+@media (max-width: 480px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .form-group-small,
+    .form-group-large {
+        flex: 1 !important;
+    }
+}
+
+/* ============================================================
+   CONTRACT PROGRESS INDICATOR
+   ============================================================ */
+
+.contract-progress-indicator {
+    margin-bottom: 16px;
+    padding: 12px;
+    background: linear-gradient(135deg, #E6F2FF 0%, #F0F7FF 100%);
+    border-radius: 8px;
+    border-left: 3px solid #006CFF;
+}
+
+.contract-progress-indicator .progress-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.contract-progress-indicator .step-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #022D94;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.contract-progress-indicator .step-name {
+    font-size: 13px;
+    color: #666666;
+    font-weight: 500;
+}
+
+.progress-bar-container {
+    height: 4px;
+    background: #D0E5FF;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #006CFF 0%, #0059DB 100%);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
