@@ -1,539 +1,69 @@
 sterbegeldversicherung:
-  
   # ============================================================================
-  # 1. GRUNDLAGEN - Was ist eine Sterbegeldversicherung?
+  # PRODUKT-KERNDATEN (für Tarifvergleich)
   # ============================================================================
+  versicherungssumme:
+    min_eur: 1000
+    max_eur: 20000
+    empfehlung:
+      standard: 8000
+      mit_extras: 10000-15000
+    hinweis: >
+      Versicherungssumme sollte Bestattungskosten und Inflationspuffer abdecken.
   
-  definition:
-    beschreibung: >
-      Eine Sterbegeldversicherung ist eine spezielle Form der Lebensversicherung,
-      die im Todesfall eine vereinbarte Versicherungssumme auszahlt. Sie dient
-      zur Bestattungsvorsorge, entlastet Hinterbliebene von den Kosten einer
-      Beerdigung und ermöglicht eine selbstbestimmte Vorsorge für eigene
-      Bestattungswünsche.
-    
-    synonyme:
-      - Bestattungsversicherung
-      - Beerdigungsversicherung
-      - Sterbeversicherung
-    
-    zweck:
-      - Finanzierung der Bestattungskosten
-      - Entlastung der Angehörigen im Todesfall
-      - Selbstbestimmte Vorsorge
-      - Wahrung individueller Bestattungswünsche
-    
-    auszahlung: >
-      Feste Kapitalauszahlung an die begünstigte Person beim Tod der
-      versicherten Person. Die Summe ist frei verwendbar, sollte aber für
-      die Bestattung genutzt werden.
+  beitragsfaktoren:
+    - Eintrittsalter
+    - Versicherungssumme
+    - Gesundheitsprüfung
+    - Beitragsdauer (z.B. bis 85 Jahre)
+    - Zahlweise (monatlich, jährlich, einmalig)
 
-  # ============================================================================
-  # 2. KOSTEN & KALKULATION - Was kostet eine Bestattung und die Versicherung?
-  # ============================================================================
-  
-  bestattungskosten:
-    deutschland_durchschnitt_eur: [7000, 10000]
-    
-    beispiel_aufstellung:
-      beschreibung: "Typische Kostenaufstellung einer durchschnittlichen Bestattung"
-      positionen:
-        beratung_und_betreuung: 400
-        versorgung_verstorbener: 300
-        gebuehren_krematorium: 650
-        sarg: 1200
-        urne: 300
-        aufbahrung: 200
-        ueberfuehrungen: 800
-        trauerfeier: 800
-        reihengrab: 750
-        grabstein: 700
-        grabpflege: 1800
-        gesamt: 7900
-    
-    nach_bestattungsart:
-      erdbestattung:
-        minimum_eur: 7000
-        durchschnitt_eur: 8500
-        mit_extras_eur: 12000
-        besonderheiten: "Sarg, Grabkauf, höhere Friedhofsgebühren"
-        
-      feuerbestattung:
-        minimum_eur: 4000
-        durchschnitt_eur: 6500
-        mit_extras_eur: 9000
-        besonderheiten: "Urne statt Sarg, Krematoriumsgebühren"
-        
-      alternative_bestattungen:
-        seebestattung_eur: [3000, 5000]
-        baumbestattung_eur: [2500, 4000]
-        wiesenbestattung_eur: [2000, 3500]
-    
-    regionale_unterschiede:
-      grossstadt_zuschlag: "+20-40%"
-      beispiel: "München und Hamburg deutlich teurer als ländliche Regionen"
-      hinweis: "Friedhofsgebühren variieren stark je nach Kommune"
-    
-    empfehlung_versicherungssumme:
-      minimum: 5000
-      empfohlen: 8000
-      mit_besonderen_wuenschen: 10000-15000
-      hinweis: >
-        Die Versicherungssumme sollte die geschätzten Bestattungskosten
-        decken und einen Puffer für steigende Kosten einkalkulieren.
-
-  beitragsberechnung:
-    faktoren:
-      - Eintrittsalter
-      - Versicherungssumme
-      - Gesundheitsprüfung (ja/nein)
-      - Beitragslaufzeit
-      - Zahlweise (monatlich/jährlich/einmalig)
-    
-    alter_und_beitraege:
-      eintrittsalter:
-        minimum: 18  # manche Versicherer ab 0 für Kinderabsicherung
-        maximum: "75-90 Jahre (je nach Versicherer)"
-        optimal: "40-60 Jahre (bestes Preis-Leistungs-Verhältnis)"
-      
-      beitragsbeispiele:
-        beschreibung: "Monatliche Beiträge für 8.000 EUR Versicherungssumme, Beitragsfrei ab 85"
-        alter_30:
-          monatlich_eur: [8, 12]
-          jahreskosten_eur: [96, 144]
-          gesamtkosten_bis_85_eur: [5280, 7920]
-        alter_40:
-          monatlich_eur: [12, 18]
-          jahreskosten_eur: [144, 216]
-          gesamtkosten_bis_85_eur: [6480, 9720]
-        alter_50:
-          monatlich_eur: [18, 28]
-          jahreskosten_eur: [216, 336]
-          gesamtkosten_bis_85_eur: [7560, 11760]
-        alter_60:
-          monatlich_eur: [30, 45]
-          jahreskosten_eur: [360, 540]
-          gesamtkosten_bis_85_eur: [9000, 13500]
-        alter_70:
-          monatlich_eur: [45, 65]
-          jahreskosten_eur: [540, 780]
-          gesamtkosten_bis_85_eur: [8100, 11700]
-    
-    zahlungsmodelle:
-      monatlich:
-        beschreibung: "Kleine Beträge, flexibel kündbar"
-        verbreitung: "Am häufigsten gewählt"
-      jaehrlich:
-        beschreibung: "Oft 5-10% Rabatt gegenüber monatlicher Zahlung"
-        vorteil: "Kostenersparnis"
-      einmalig:
-        beschreibung: "Hohe Einmalzahlung, danach lebenslang geschützt"
-        geeignet_fuer: "Personen mit Kapitalvermögen"
-    
-    beitragsdauer:
-      varianten:
-        begrenzt:
-          beschreibung: "Zahlung bis zu einem bestimmten Alter (z.B. 65, 75, 85)"
-          vorteil: "Danach beitragsfrei, Schutz bleibt lebenslang"
-        lebenslang:
-          beschreibung: "Zahlung bis zum Lebensende"
-          vorteil: "Niedrigere monatliche Beiträge"
-
-  # ============================================================================
-  # 3. PRODUKTVARIANTEN - Welche Optionen gibt es?
-  # ============================================================================
-  
-  gesundheitspruefung:
+  tarifvarianten:
     mit_gesundheitspruefung:
-      beschreibung: >
-        Einfache Gesundheitsfragen (meist 3-5 Fragen), kein ärztliches Attest nötig
       vorteile:
         - Sofortiger Versicherungsschutz (keine Wartezeit)
-        - Günstigere Beiträge (ca. 20-30% weniger)
-        - Höhere Versicherungssummen möglich
-      nachteile:
-        - Gesundheitsbedingungen erforderlich
-        - Bei Vorerkrankungen evtl. Ablehnung oder Risikoaufschlag
-      geeignet_fuer: "Gesunde Personen unter 70 Jahren"
-    
+        - Günstigerer Beitrag
+      nachteil: "Nicht für alle Gesundheitszustände geeignet"
     ohne_gesundheitspruefung:
-      beschreibung: >
-        Keine Gesundheitsfragen, Annahmegarantie für alle
       vorteile:
+        - Annahmegarantie
         - Auch bei Vorerkrankungen möglich
-        - Keine Ablehnungsgefahr
-        - Einfacher Abschluss
-      nachteile:
-        - Wartezeit von 6-36 Monaten bis zur vollen Leistung
-        - Höhere Beiträge (ca. 20-30% teurer)
-      geeignet_fuer: "Personen mit Vorerkrankungen oder im höheren Alter"
-    
-    wichtiger_hinweis: >
-      Falsche oder verschwiegene Angaben bei Gesundheitsfragen können zum
-      Verlust des Versicherungsschutzes führen. Ehrlichkeit ist zwingend!
+      nachteil: "Wartezeit bis volle Leistung"
 
-  wartezeiten:
-    definition: >
-      Zeitraum nach Vertragsabschluss, in dem noch keine oder nur eingeschränkte
-      Leistung bei Tod durch Krankheit ausgezahlt wird.
-    
-    nach_tarif:
-      mit_gesundheitspruefung:
-        wartezeit: "Keine"
-        leistung: "Sofortiger Vollschutz ab Tag 1"
-        grund: "Gesundheitsrisiko wurde geprüft"
-      
-      ohne_gesundheitspruefung:
-        typische_wartezeit_monate: [24, 36]
-        kurze_wartezeit_monate: [6, 12]
-        grund: "Schutz vor Vertragsabschluss bei bekannter schwerer Krankheit"
-    
-    leistung_waehrend_wartezeit:
-      bei_krankheitstod:
-        variante_beitragsrueckzahlung: "Nur eingezahlte Beiträge werden zurückgezahlt"
-        variante_gestaffelt: "Gestaffelte Leistung (z.B. 50% nach 12 Monaten, 75% nach 24 Monaten)"
-        variante_keine: "Keine Leistung, nur Beiträge zurück"
-      
-      bei_unfalltod:
-        leistung: "Volle Versicherungssumme sofort (bei fast allen Tarifen)"
-        bonus_manche_tarife: "Doppelte Summe bei Unfalltod"
-        definition_unfall: "Plötzliches, von außen wirkendes Ereignis (z.B. Verkehrsunfall)"
-    
-    beispiel:
-      situation: "Tod im 18. Monat bei Tarif mit 36 Monaten Wartezeit"
-      tod_durch_krankheit: "Meist nur Beitragsrückzahlung oder 50% der Summe"
-      tod_durch_unfall: "Volle Versicherungssumme (8.000 EUR)"
+  wartezeit_logik:
+    mit_pruefung: "keine"
+    ohne_pruefung:
+      typ: "24–36 Monate"
+      unfalltod: "volle Leistung sofort"
 
-  ueberschussbeteiligung:
-    rechtsgrundlage: "§ 153 Versicherungsvertragsgesetz (VVG)"
-    
-    entstehung:
-      beschreibung: "Überschüsse entstehen wenn Versicherer besser wirtschaften als kalkuliert"
-      quellen:
-        - "Höhere Kapitalerträge als erwartet"
-        - "Niedrigere Sterblichkeit als kalkuliert"
-        - "Geringere Verwaltungskosten"
-    
-    varianten:
-      bonuszahlung:
-        mechanismus: "Überschüsse erhöhen die Versicherungssumme"
-        beispiel: "8.000 EUR Grundsumme + 1.200 EUR Bonus = 9.200 EUR Auszahlung"
-        vorteil: "Inflationsschutz, steigende Bestattungskosten werden abgefedert"
-        garantie: "Bereits gutgeschriebene Boni sind garantiert"
-      
-      beitragsrabatt:
-        mechanismus: "Überschüsse senken den laufenden Beitrag"
-        beispiel: "40 EUR Bruttobeitrag - 5 EUR Überschuss = 35 EUR Nettobeitrag"
-        vorteil: "Sofort spürbar, niedrigere monatliche Belastung"
-        wichtig: >
-          Überschüsse nicht garantiert! Beitrag kann schwanken, steigt aber
-          nie über den vereinbarten Bruttobeitrag.
-      
-      keine:
-        mechanismus: "Keine Überschussbeteiligung, dafür kalkulatorisch sichere Prämie"
-        vorteil: "Planungssicherheit, stabiler Beitrag von Anfang an"
-        nachteil: "Meist etwas teurer als Tarife mit Überschussbeteiligung"
-    
-    empfehlung: >
-      Bonusmodell für langfristige Absicherung gegen Inflation,
-      Beitragsrabatt für sofortige Kostenersparnis.
+  beitragsbeispiele:
+    versicherungssumme_8000:
+      alter_40: "12–18 €/Monat"
+      alter_60: "30–45 €/Monat"
+      alter_70: "45–65 €/Monat"
 
-  # ============================================================================
-  # 4. VERTRAGSMANAGEMENT - Wie kann ich den Vertrag ändern oder beenden?
-  # ============================================================================
-  
-  vertragsaenderungen:
-    kuendigung:
-      jederzeit_moeglich: true
-      form: "Schriftlich (Brief, E-Mail, Fax)"
-      frist: "Zum Ende der Versicherungsperiode (meist monatlich)"
-      
-      rueckkaufswert:
-        erklaerung: >
-          Betrag, den der Versicherte bei Kündigung zurückerhält.
-          Meist deutlich unter den eingezahlten Beiträgen!
-        hoehe_erste_jahre: "Oft 0 EUR (Abschlusskosten werden verrechnet)"
-        hoehe_nach_10_jahren: "50-80% der eingezahlten Beiträge"
-        hoehe_nach_20_jahren: "80-95% der eingezahlten Beiträge"
-        fazit: "Kündigung ist meist ein Verlustgeschäft"
-    
-    bessere_alternativen:
-      beitragsfreistellung:
-        beschreibung: >
-          Zahlungen werden ausgesetzt, Versicherungsschutz bleibt in
-          reduzierter Höhe bestehen
-        vorteil: "Kein Totalverlust, Vertrag kann später wieder aktiviert werden"
-        nachteil: "Versicherungssumme sinkt proportional zu eingezahlten Beiträgen"
-        geeignet_fuer: "Temporäre finanzielle Engpässe"
-      
-      beitragsstundung:
-        beschreibung: "Beiträge werden temporär ausgesetzt, später nachgezahlt"
-        vorteil: "Voller Versicherungsschutz bleibt bestehen"
-        nachteil: "Nachzahlung erforderlich, ggf. mit Zinsen"
-        zeitraum: "Meist 3-12 Monate möglich"
-      
-      tarifwechsel_intern:
-        beschreibung: "Wechsel zu günstigerem Tarif beim gleichen Versicherer"
-        vorteil: "Meist keine neue Gesundheitsprüfung nötig"
-        verfuegbarkeit: "Nicht bei allen Versicherern möglich"
-      
-      zweite_versicherung:
-        beschreibung: "Statt Erhöhung der Summe: Zweite Police abschließen"
-        vorteil: "Flexibilität, kann einzeln gekündigt werden"
-        hinweis: "Bei Summenerhöhung oft neue Gesundheitsprüfung nötig"
-
-  # ============================================================================
-  # 5. BETEILIGTE PERSONEN - Wer ist wer im Vertrag?
-  # ============================================================================
-  
-  beteiligte_personen:
-    versicherte_person:
-      definition: "Die Person, deren Leben versichert ist"
-      bei_todesfall: "Versicherungssumme wird fällig"
-    
-    versicherungsnehmer:
-      definition: "Schließt den Vertrag ab und hat Rechte und Pflichten"
-      aufgaben:
-        - "Beitragszahlung"
-        - "Vertragsänderungen vornehmen"
-        - "Bezugsberechtigung festlegen"
-    
-    beitragszahler:
-      definition: "Leistet die Beiträge (meist identisch mit Versicherungsnehmer)"
-      hinweis: "Kann auch eine andere Person sein (z.B. Kind zahlt für Elternteil)"
-    
-    bezugsberechtigte_person:
-      definition: "Empfänger der Versicherungssumme im Todesfall"
-      detail: "Siehe Abschnitt 'bezugsberechtigung' für Details"
-
-  bezugsberechtigung:
-    definition: >
-      Die bezugsberechtigte Person erhält im Todesfall die Versicherungssumme.
-      Diese Festlegung ist zentral für eine schnelle und zweckgemäße Auszahlung.
-    
-    varianten:
-      namentlich_benannt:
-        beispiel: "Maria Mustermann (Tochter), geb. 15.05.1985"
-        vorteile:
-          - "Direktauszahlung außerhalb des Nachlasses"
-          - "Schnelle Verfügbarkeit (meist 7-14 Tage)"
-          - "Keine Erbschaftssteuer"
-          - "Nicht Teil von Erbstreitigkeiten"
-        empfohlen: true
-      
-      nach_erbfolge:
-        beispiel: "Gesetzliche Erben"
-        nachteile:
-          - "Fällt in den Nachlass"
-          - "Evtl. Erbschaftssteuer (je nach Verwandtschaftsgrad)"
-          - "Verzögerung durch Erbscheinverfahren"
-          - "Bei mehreren Erben: Aufteilung"
-      
-      bestatter:
-        beispiel: "Bestattungsinstitut Müller GmbH"
-        vorteil: "Bestattung ist garantiert finanziert, keine Zweckentfremdung"
-        nachteil: "Weniger flexibel, Bindung an einen Bestatter"
-      
-      treuhand_vorsorge:
-        beispiel: "Deutsche Bestattungsvorsorge Treuhand AG"
-        vorteil: "Neutrale Verwaltung, Verwendung ausschließlich für Bestattung"
-        verfuegbarkeit: "Bei manchen Anbietern verfügbar"
-    
-    aenderung:
-      jederzeit_moeglich: true
-      form: "Schriftliche Mitteilung an Versicherer (formlos)"
-      kosten: "Kostenlos"
-      empfehlung: "Auch Alternativbegünstigten festlegen (falls Erstbegünstigter vorverstirbt)"
-    
-    wichtige_hinweise:
-      erbfall: >
-        Nur wenn KEINE Bezugsperson benannt ist, fällt die Versicherung
-        in den Nachlass und unterliegt der Erbschaftssteuer.
-      empfehlung: >
-        Konkrete Vertrauensperson benennen (z.B. Kind, Ehepartner) oder
-        Bestatter, um schnelle Auszahlung und zweckgemäße Verwendung zu sichern.
-
-  # ============================================================================
-  # 6. ABGRENZUNG - Was ist der Unterschied zu anderen Produkten?
-  # ============================================================================
-  
-  abgrenzung_andere_produkte:
-    vs_risikolebensversicherung:
-      unterschiede:
-        zweck:
-          risiko: "Einkommensabsicherung für Hinterbliebene (z.B. bei Wegfall Hauptverdiener)"
-          sterbegeld: "Deckung der Bestattungskosten"
-        
-        versicherungssumme:
-          risiko: "50.000 - 500.000 EUR (je nach Einkommen und Absicherungsbedarf)"
-          sterbegeld: "1.000 - 20.000 EUR"
-        
-        laufzeit:
-          risiko: "Zeitlich begrenzt (z.B. bis 67, danach endet Schutz komplett)"
-          sterbegeld: "Lebenslang gültig"
-        
-        rueckkaufswert:
-          risiko: "Keiner (reine Risikoabsicherung, kein Kapitalaufbau)"
-          sterbegeld: "Ja, aber meist gering in ersten Jahren"
-        
-        auszahlung:
-          risiko: "Nur bei Tod während Vertragslaufzeit"
-          sterbegeld: "Garantiert bei Tod, egal wann"
-      
-      wer_braucht_was:
-        familie_mit_kindern: "BEIDE Versicherungen empfohlen!"
-        alleinstehende: "Sterbegeldversicherung meist ausreichend"
-        rentner: "Risikoleben endet meist mit 67, Sterbegeld weiterhin sinnvoll"
-    
-    vs_bestattungsvorsorgevertrag:
-      unterschied:
-        vorsorgevertrag: >
-          Direkter Vertrag mit einem Bestattungsinstitut. Leistungen
-          (Sarg, Urne, Trauerfeier etc.) sind fest vereinbart.
-        sterbegeld: >
-          Kapitalauszahlung an Begünstigten. Verwendung ist frei,
-          Bestatter kann frei gewählt werden.
-      
-      vergleich:
-        flexibilitaet:
-          vorsorgevertrag: "Gering (an einen Bestatter gebunden)"
-          sterbegeld: "Hoch (freie Wahl, Geld kann auch anders verwendet werden)"
-        
-        planungssicherheit:
-          vorsorgevertrag: "Hoch (alle Leistungen genau festgelegt)"
-          sterbegeld: "Mittel (Summe steht fest, Verwendung offen)"
-        
-        inflation:
-          vorsorgevertrag: "Risiko: Leistungen könnten in 20 Jahren nicht mehr reichen"
-          sterbegeld: "Mit Überschussbeteiligung: Summe steigt oft mit"
-      
-      empfehlung: >
-        Sterbegeldversicherung bietet mehr Flexibilität. Bestattungsvorsorgevertrag
-        nur wenn konkrete Wünsche bereits feststehen und langfristige Bindung
-        an einen Bestatter gewünscht ist.
-    
-    vs_sparen_ruecklage:
-      vergleich:
-        verfuegbarkeit:
-          sparen: "Jederzeit flexibel verfügbar"
-          versicherung: "Erst im Todesfall, zweckgebunden"
-        
-        sozialrecht:
-          sparen: "Wird auf Sozialhilfe/Grundsicherung angerechnet (über Freibetrag)"
-          versicherung: "Schonvermögen, wird NICHT angerechnet"
-        
-        pfaendungsschutz:
-          sparen: "Nur gesetzlicher Freibetrag geschützt"
-          versicherung: "Bis ca. 8.000 EUR pfändungsgeschützt"
-        
-        disziplin:
-          sparen: "Versuchung, Geld für anderes auszugeben"
-          versicherung: "Zweckgebunden, kann nicht zweckentfremdet werden"
-        
-        verzinsung:
-          sparen: "Aktuell sehr niedrig (0,01-1%)"
-          versicherung: "Überschussbeteiligung möglich, aber nicht garantiert"
-      
-      empfehlung: >
-        Kombination ideal: Notfallfonds auf Sparkonto + Sterbegeldversicherung
-        für Bestattungskosten. Besonders wichtig für Sozialhilfeempfänger!
-
-  # ============================================================================
-  # 7. ZIELGRUPPEN & SINNHAFTIGKEIT - Für wen ist es sinnvoll?
-  # ============================================================================
-  
-  sinnvoll_fuer:
-    zielgruppen:
-      - Menschen ohne ausreichende Ersparnisse für Bestattungskosten
-      - Personen ohne oder mit finanziell schwachen Angehörigen
-      - Menschen mit konkreten Bestattungswünschen (Selbstbestimmung)
-      - Sozialhilfe-/Grundsicherungsempfänger (Schonvermögen!)
-      - Alleinstehende ohne Hinterbliebene
-    
-    vorteile:
-      - Selbstbestimmte Planung der eigenen Bestattung
-      - Finanzielle Entlastung der Angehörigen im Trauerfall
-      - Schonvermögen im Sozialrecht (wird nicht angerechnet)
-      - Pfändungsschutz bis ca. 8.000 EUR
-      - Klare Nachlassregelung (außerhalb Nachlass bei Bezugsperson)
-      - Planungssicherheit (Summe steht fest)
-    
-    nachteile:
-      - Kosten höher als tatsächliche Bestattungskosten bei langer Laufzeit
-      - Kündigung meist Verlustgeschäft (niedriger Rückkaufswert)
-      - Bei sehr jungem Eintrittsalter: hohe Gesamtkosten
-    
-    nicht_sinnvoll_fuer:
-      - Personen mit hohem Vermögen (Bestattung aus Rücklagen finanzierbar)
-      - Sehr junge Menschen unter 30 (Alternative: Erst ab 40 abschließen)
-      - Menschen mit sehr kurzer Lebenserwartung (Wartezeiten beachten!)
-
-  # ============================================================================
-  # 8. RECHTLICHER & SOZIALER RAHMEN
-  # ============================================================================
-  
-  rechtlicher_rahmen:
-    steuerliche_behandlung:
-      auszahlung_mit_bezugsperson: "Steuerfrei (keine Erbschaftssteuer)"
-      auszahlung_ohne_bezugsperson: "Steuerpflichtig als Teil des Nachlasses"
-      beitraege_absetzbar: false
-      hinweis: "Nur Altverträge vor 1. Januar 2005 waren steuerlich absetzbar"
-    
-    sozialrecht_schonvermoegen:
+  sozialrecht:
+    schonvermoegen:
       beschreibung: >
-        Sterbegeldversicherung wird NICHT als verwertbares Vermögen auf
-        Sozialhilfe oder Grundsicherung angerechnet (Schonvermögen).
-      angemessene_hoehe: "10.000 - 15.000 EUR (in Einzelfällen bis 20.000 EUR)"
-      wichtig: >
-        Die Versicherungssumme muss 'angemessen' sein. Überhöhte Summen
-        könnten vom Sozialamt angefochten werden.
-    
-    widerrufsrecht:
-      frist_tage: 30
-      beginn: "Ab Erhalt der Vertragsunterlagen und Widerrufsbelehrung"
-      form: "Schriftlich (Brief, E-Mail, Fax)"
-      folge: "Erhalt aller gezahlten Beiträge zurück"
+        Versicherungssummen bis ca. 10.000–15.000 € gelten in der Regel als
+        angemessenes Schonvermögen im Sozialrecht (§ 90 SGB XII).
+
+  empfehlungen:
+    ideal_fuer:
+      - Personen ohne ausreichende Rücklagen für Bestattungskosten
+      - Sozialhilfeempfänger (Schonvermögen)
+      - Alleinstehende mit klaren Bestattungswünschen
+    nicht_empfohlen_fuer:
+      - Sehr junge Personen (< 30)
+      - Personen mit hohem Vermögen
 
   # ============================================================================
-  # 9. LEISTUNGSABWICKLUNG - Was passiert im Todesfall?
+  # ABGRENZUNG (nur in Kurzform)
   # ============================================================================
-  
-  leistungsabwicklung:
-    im_todesfall:
-      erforderliche_unterlagen:
-        - Sterbeurkunde (Original oder beglaubigte Kopie)
-        - Versicherungsschein
-        - Ggf. ärztliche Unterlagen bei Unfalltod
-        - Personalausweis der bezugsberechtigten Person
-      
-      ablauf:
-        schritt_1: "Angehörige/Begünstigte kontaktieren Versicherer (Telefon/Schriftlich)"
-        schritt_2: "Unterlagen einreichen (per Post oder Online-Portal)"
-        schritt_3: "Versicherer prüft Anspruch (meist 3-7 Tage)"
-        schritt_4: "Auszahlung auf Konto der bezugsberechtigten Person"
-      
-      auszahlungsdauer: "Meist 7-14 Tage nach Einreichung vollständiger Unterlagen"
-      
-    wichtige_hinweise:
-      versicherungsschein: "An sicherem Ort aufbewahren, Angehörige informieren!"
-      mehrere_versicherungen: "Alle Versicherungen zahlen (keine Kürzung)"
-      bestatter_vorfinanzierung: "Viele Bestatter akzeptieren Abtretung der Versicherung"
-
-  # ============================================================================
-  # 10. PRAKTISCHE INFORMATIONEN
-  # ============================================================================
-  
-  versicherungssumme:
-    bereich_eur: [1000, 20000]
-    haeufigste_summen: [5000, 8000, 10000]
-    empfehlung: >
-      Orientierung an geschätzten Bestattungskosten plus 20% Puffer
-      für Inflation und unerwartete Kosten.
-
-  schutzdauer:
-    lebenslang: true
-    beitragsfreie_zeit:
-      erklaerung: >
-        Nach Ablauf der vereinbarten Zahlzeit bleibt der Versicherungsschutz
-        lebenslang bestehen, auch wenn keine weiteren Beiträge mehr gezahlt werden.
-      beispiel: "Beitragszahlung bis 85, Schutz bis Lebensende"
+  abgrenzung:
+    risikolebensversicherung: >
+      Höhere Summen, Einkommensabsicherung für Hinterbliebene, keine Kapitalbildung.
+    bestattungsvorsorgevertrag: >
+      Vertrag direkt mit Bestatter; weniger flexibel, keine Kapitalauszahlung.
+    sparruecklage: >
+      Flexibler, aber kein Pfändungs- oder Sozialschutz.
